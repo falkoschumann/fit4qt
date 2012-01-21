@@ -36,13 +36,9 @@ namespace Fit4Qt {
 class FileRunner : public QObject
 {
     Q_OBJECT
+
 public:
-    explicit FileRunner(QObject *parent = 0);
-    
-signals:
-    
-public slots:
-    
+    explicit FileRunner(QObject *parent = 0);    
 };
 
 } // namespace Fit4Qt

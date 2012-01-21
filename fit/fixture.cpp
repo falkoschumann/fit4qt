@@ -30,6 +30,17 @@
 
 namespace Fit4Qt {
 
+QString Fixture::escape(const QString &string) {
+    QString replaced(string);
+    replaced.replace("&", "&amp;");
+    replaced.replace("<", "&lt;");
+    replaced.replace("  ", " &nbsp;");
+    replaced.replace("\r\n", "<br />");
+    replaced.replace("\r", "<br />");
+    replaced.replace("\n", "<br />");
+    return replaced;
+}
+
 Fixture::Fixture(QObject *parent) :
     QObject(parent)
 {

@@ -37,12 +37,7 @@ class FrameworkTest : public QObject
 {
     Q_OBJECT
 
-public:
-    FrameworkTest();
-
 private slots:
-    void initTestCase();
-    void cleanupTestCase();
     void testEscape();
 };
 

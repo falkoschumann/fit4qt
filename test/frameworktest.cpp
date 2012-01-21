@@ -28,26 +28,26 @@
 
 #include "frameworktest.h"
 
+#include <fit/fixture.h>
+
 #include <QtCore/QString>
 #include <QtTest/QtTest>
 
 namespace Fit4Qt {
 
-FrameworkTest::FrameworkTest()
-{
-}
-
-void FrameworkTest::initTestCase()
-{
-}
-
-void FrameworkTest::cleanupTestCase()
-{
-}
-
 void FrameworkTest::testEscape()
 {
-    QVERIFY2(true, "Failure");
+    QString junk("!@#$%^*()_-+={}|[]\\:\";',./?`");
+    QCOMPARE(junk, Fixture::escape(junk));
+    QCOMPARE(QString(""), Fixture::escape(""));
+    QCOMPARE(QString("&lt;"), Fixture::escape("<"));
+    QCOMPARE(QString("&lt;&lt;"), Fixture::escape("<<"));
+    QCOMPARE(QString("x&lt;"), Fixture::escape("x<"));
+    QCOMPARE(QString("&amp;"), Fixture::escape("&"));
+    QCOMPARE(QString("&lt;&amp;&lt;"), Fixture::escape("<&<"));
+    QCOMPARE(QString("&amp;&lt;&amp;"), Fixture::escape("&<&"));
+    QCOMPARE(QString("a &lt; b &amp;&amp; c &lt; d"), Fixture::escape("a < b && c < d"));
+    QCOMPARE(QString("a<br />b"), Fixture::escape("a\nb"));
 }
 
 } // namespace Fit4Qt

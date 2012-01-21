@@ -37,9 +37,6 @@ class ParseTest : public QObject
 {
     Q_OBJECT
 
-public:
-    explicit ParseTest();
-
 private slots:
     void testParsing();
     void testRecursing();

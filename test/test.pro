@@ -8,7 +8,7 @@ QT       += testlib
 
 QT       -= gui
 
-TARGET = frameworktest
+TARGET = runtests
 CONFIG   += console
 CONFIG   -= app_bundle
 
@@ -16,6 +16,7 @@ TEMPLATE = app
 
 SOURCES += \
     main.cpp \
+    ../fit/fixture.cpp \
     ../fit/parse.cpp \
     parsetest.cpp \
     frameworktest.cpp
@@ -23,6 +24,7 @@ SOURCES += \
 #DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
+    ../fit/fixture.h \
     ../fit/parse.h \
     parsetest.h \
     frameworktest.h

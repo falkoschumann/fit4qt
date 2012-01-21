@@ -34,10 +34,6 @@
 
 namespace Fit4Qt {
 
-ParseTest::ParseTest()
-{
-}
-
 void ParseTest::testParsing()
 {
     QStringList tags;

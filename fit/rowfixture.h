@@ -36,13 +36,9 @@ namespace Fit4Qt {
 class RowFixture : public Fixture
 {
     Q_OBJECT
+
 public:
     explicit RowFixture(QObject *parent = 0);
-    
-signals:
-    
-public slots:
-    
 };
 
 } // namespace Fit4Qt

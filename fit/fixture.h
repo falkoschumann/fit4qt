@@ -36,13 +36,11 @@ namespace Fit4Qt {
 class Fixture : public QObject
 {
     Q_OBJECT
+
 public:
+    static QString escape(const QString &);
+
     explicit Fixture(QObject *parent = 0);
-    
-signals:
-    
-public slots:
-    
 };
 
 } // namespace Fit4Qt

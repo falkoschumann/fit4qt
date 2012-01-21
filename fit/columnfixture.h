@@ -36,13 +36,9 @@ namespace Fit4Qt {
 class ColumnFixture : public Fixture
 {
     Q_OBJECT
+
 public:
     explicit ColumnFixture(QObject *parent = 0);
-    
-signals:
-    
-public slots:
-    
 };
 
 } // namespace Fit4Qt
