@@ -26,23 +26,37 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef FIT4QT_PARSETEST_H
-#define FIT4QT_PARSETEST_H
+#include <fit/fixture.h>
 
-#include <QObject>
+#include <QtTest/QtTest>
 
 namespace Fit4Qt {
 
-class ParseTest : public QObject
+class FrameworkTest : public QObject
 {
     Q_OBJECT
 
 private slots:
-    void testParsing();
-    void testRecursing();
-    void testIterating();
+    void testEscape();
 };
+
+void FrameworkTest::testEscape()
+{
+    QString junk("!@#$%^*()_-+={}|[]\\:\";',./?`");
+    QCOMPARE(junk, Fixture::escape(junk));
+    QCOMPARE(QString(""), Fixture::escape(""));
+    QCOMPARE(QString("&lt;"), Fixture::escape("<"));
+    QCOMPARE(QString("&lt;&lt;"), Fixture::escape("<<"));
+    QCOMPARE(QString("x&lt;"), Fixture::escape("x<"));
+    QCOMPARE(QString("&amp;"), Fixture::escape("&"));
+    QCOMPARE(QString("&lt;&amp;&lt;"), Fixture::escape("<&<"));
+    QCOMPARE(QString("&amp;&lt;&amp;"), Fixture::escape("&<&"));
+    QCOMPARE(QString("a &lt; b &amp;&amp; c &lt; d"), Fixture::escape("a < b && c < d"));
+    QCOMPARE(QString("a<br />b"), Fixture::escape("a\nb"));
+}
 
 } // namespace Fit4Qt
 
-#endif // FIT4QT_PARSETEST_H
+QTEST_APPLESS_MAIN(Fit4Qt::FrameworkTest)
+
+#include "frameworktest.moc"

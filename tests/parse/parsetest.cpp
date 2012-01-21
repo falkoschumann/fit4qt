@@ -26,21 +26,53 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "parsetest.h"
-#include "frameworktest.h"
+#include <fit/parse.h>
 
 #include <QtTest/QtTest>
 
-int main(int argc, char *argv[])
+namespace Fit4Qt {
+
+class ParseTest : public QObject
 {
-    bool result = true;
+    Q_OBJECT
 
-    Fit4Qt::ParseTest parseTest;
-    result &= QTest::qExec(&parseTest, argc, argv) == 0;
+private slots:
+    void testParsing();
+    void testRecursing();
+    void testIterating();
+};
 
-    Fit4Qt::FrameworkTest frameworkTest;
-    result &= QTest::qExec(&frameworkTest, argc, argv) == 0;
-
-    return result;
+void ParseTest::testParsing()
+{
+    QStringList tags;
+    tags << "table";
+    Parse p("leader<Table foo=2>body</table>trailer", tags);
+    QCOMPARE(QString("leader"), p.leader);
+    QCOMPARE(QString("<Table foo=2>"), p.tag);
+    QCOMPARE(QString("body"), p.body);
+    QCOMPARE(QString("trailer"), p.trailer);
 }
 
+void ParseTest::testRecursing()
+{
+    Parse p("leader<table><TR><Td>body</tD></TR></table>trailer");
+    QCOMPARE(QString(), p.body);
+    QFAIL("not implemented yet");
+    QCOMPARE(QString(), p.parts->body);
+    QCOMPARE(QString("body"), p.parts->parts->body);
+}
+
+void ParseTest::testIterating()
+{
+    Parse p("leader<table><tr><td>one</td><td>two</td><td>three</td></tr></table>trailer");
+    QFAIL("not implemented yet");
+    QCOMPARE(QString("one"), p.parts->parts->body);
+    QCOMPARE(QString("two"), p.parts->parts->more->body);
+    QCOMPARE(QString("three"), p.parts->parts->more->more->body);
+}
+
+} // namespace Fit4Qt
+
+QTEST_APPLESS_MAIN(Fit4Qt::ParseTest)
+
+#include "parsetest.moc"
