@@ -9,7 +9,7 @@ function runtest() {
     if [ "$create_xml" == "-xml" ] ;
     then
         "./${test_path}test" -xunitxml -o unittest-report.xml
-        /Users/Shared/Applications/gcovr --root=. --exclude=moc_* --xml >test-coverage.xml
+        /Users/Shared/Applications/gcovr --root="$script_path"/.. --exclude=moc_* --xml >test-coverage.xml
     else
         "./${test_path}test"
     fi
