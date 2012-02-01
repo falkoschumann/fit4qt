@@ -26,13 +26,25 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "filerunner.h"
+#ifndef FIT_PARSEEXCEPTION_H
+#define FIT_PARSEEXCEPTION_H
+
+#include <QtCore/QString>
 
 namespace Fit {
 
-FileRunner::FileRunner(QObject *parent) :
-    QObject(parent)
+class ParseException
 {
-}
+public:
+    inline ParseException(const QString &message, int errorOffset) : m_message(message), m_errorOffset(errorOffset) {}
+    inline QString message() const { return m_message; }
+    inline int errorOffset() const { return m_errorOffset; }
+
+private:
+    const QString m_message;
+    const int m_errorOffset;
+};
 
 } // namespace Fit
+
+#endif // FIT_PARSEEXCEPTION_H

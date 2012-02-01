@@ -30,7 +30,7 @@
 
 #include <QtTest/QtTest>
 
-namespace Fit4Qt {
+namespace Fit {
 
 class FrameworkTest : public QObject
 {
@@ -55,8 +55,8 @@ void FrameworkTest::testEscape()
     QCOMPARE(QString("a<br />b"), Fixture::escape("a\nb"));
 }
 
-} // namespace Fit4Qt
+} // namespace Fit
 
-QTEST_APPLESS_MAIN(Fit4Qt::FrameworkTest)
+QTEST_APPLESS_MAIN(Fit::FrameworkTest)
 
 #include "frameworktest.moc"

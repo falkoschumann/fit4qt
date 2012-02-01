@@ -28,11 +28,11 @@
 
 #include "actionfixture.h"
 
-namespace Fit4Qt {
+namespace Fit {
 
 ActionFixture::ActionFixture(QObject *parent) :
     Fixture(parent)
 {
 }
 
-} // namespace Fit4Qt
+} // namespace Fit

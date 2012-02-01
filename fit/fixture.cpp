@@ -28,7 +28,7 @@
 
 #include "fixture.h"
 
-namespace Fit4Qt {
+namespace Fit {
 
 QString Fixture::escape(const QString &string) {
     QString replaced(string);
@@ -46,4 +46,4 @@ Fixture::Fixture(QObject *parent) :
 {
 }
 
-} // namespace Fit4Qt
+} // namespace Fit

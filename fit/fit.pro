@@ -29,4 +29,5 @@ HEADERS += \
     columnfixture.h \
     rowfixture.h \
     actionfixture.h \
-    filerunner.h
+    filerunner.h \
+    parseexception.h

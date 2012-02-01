@@ -28,11 +28,11 @@
 
 #include "rowfixture.h"
 
-namespace Fit4Qt {
+namespace Fit {
 
 RowFixture::RowFixture(QObject *parent) :
     Fixture(parent)
 {
 }
 
-} // namespace Fit4Qt
+} // namespace Fit

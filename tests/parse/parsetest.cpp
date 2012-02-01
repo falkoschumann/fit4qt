@@ -30,7 +30,7 @@
 
 #include <QtTest/QtTest>
 
-namespace Fit4Qt {
+namespace Fit {
 
 class ParseTest : public QObject
 {
@@ -47,32 +47,30 @@ void ParseTest::testParsing()
     QStringList tags;
     tags << "table";
     Parse p("leader<Table foo=2>body</table>trailer", tags);
-    QCOMPARE(QString("leader"), p.leader);
-    QCOMPARE(QString("<Table foo=2>"), p.tag);
-    QCOMPARE(QString("body"), p.body);
-    QCOMPARE(QString("trailer"), p.trailer);
+    QCOMPARE(p.leader, QString("leader"));
+    QCOMPARE(p.tag, QString("<Table foo=2>"));
+    QCOMPARE(p.body, QString("body"));
+    QCOMPARE(p.trailer, QString("trailer"));
 }
 
 void ParseTest::testRecursing()
 {
     Parse p("leader<table><TR><Td>body</tD></TR></table>trailer");
-    QCOMPARE(QString(), p.body);
-    QFAIL("not implemented yet");
-    QCOMPARE(QString(), p.parts->body);
-    QCOMPARE(QString("body"), p.parts->parts->body);
+    QCOMPARE(p.body, QString());
+    QCOMPARE(p.parts->body, QString());
+    QCOMPARE(p.parts->parts->body, QString("body"));
 }
 
 void ParseTest::testIterating()
 {
     Parse p("leader<table><tr><td>one</td><td>two</td><td>three</td></tr></table>trailer");
-    QFAIL("not implemented yet");
-    QCOMPARE(QString("one"), p.parts->parts->body);
-    QCOMPARE(QString("two"), p.parts->parts->more->body);
-    QCOMPARE(QString("three"), p.parts->parts->more->more->body);
+    QCOMPARE(p.parts->parts->body, QString("one"));
+    QCOMPARE(p.parts->parts->more->body, QString("two"));
+    QCOMPARE(p.parts->parts->more->more->body, QString("three"));
 }
 
-} // namespace Fit4Qt
+} // namespace Fit
 
-QTEST_APPLESS_MAIN(Fit4Qt::ParseTest)
+QTEST_APPLESS_MAIN(Fit::ParseTest)
 
 #include "parsetest.moc"

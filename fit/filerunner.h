@@ -26,12 +26,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef FIT4QT_FILERUNNER_H
-#define FIT4QT_FILERUNNER_H
+#ifndef FIT_FILERUNNER_H
+#define FIT_FILERUNNER_H
 
 #include <QObject>
 
-namespace Fit4Qt {
+namespace Fit {
 
 class FileRunner : public QObject
 {
@@ -41,6 +41,6 @@ public:
     explicit FileRunner(QObject *parent = 0);    
 };
 
-} // namespace Fit4Qt
+} // namespace Fit
 
-#endif // FIT4QT_FILERUNNER_H
+#endif // FIT_FILERUNNER_H

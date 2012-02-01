@@ -26,18 +26,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef FIT4QT_PARSE_H
-#define FIT4QT_PARSE_H
+#ifndef FIT_PARSE_H
+#define FIT_PARSE_H
+
+#include "parseexception.h"
 
 #include <QtCore/QStringList>
 
-namespace Fit4Qt {
+namespace Fit {
 
 class Parse
 {
 public:
-    Parse(const QString &text);
-    Parse(const QString &text, const QStringList &tags);
+    static QStringList tags;
+
+    Parse(const QString &text,
+          const QStringList &tags = Parse::tags,
+          int level = 0,
+          int offset = 0) throw (ParseException);
     ~Parse();
     
     QString leader;
@@ -48,8 +54,14 @@ public:
 
     Parse *more;
     Parse *parts;
+
+protected:
+    static int findMatchingEndTag(const QString &lc,
+                                  int matchFromHere,
+                                  const QString &tag,
+                                  int offset) throw (ParseException);
 };
 
-} // namespace Fit4Qt
+} // namespace Fit
 
-#endif // FIT4QT_PARSE_H
+#endif // FIT_PARSE_H

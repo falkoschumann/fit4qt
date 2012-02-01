@@ -26,12 +26,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef FIT4QT_ACTIONFIXTURE_H
-#define FIT4QT_ACTIONFIXTURE_H
+#ifndef FIT_ACTIONFIXTURE_H
+#define FIT_ACTIONFIXTURE_H
 
 #include "fixture.h"
 
-namespace Fit4Qt {
+namespace Fit {
 
 class ActionFixture : public Fixture
 {
@@ -41,6 +41,6 @@ public:
     explicit ActionFixture(QObject *parent = 0);
 };
 
-} // namespace Fit4Qt
+} // namespace Fit
 
-#endif // FIT4QT_ACTIONFIXTURE_H
+#endif // FIT_ACTIONFIXTURE_H

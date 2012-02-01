@@ -28,11 +28,11 @@
 
 #include "columnfixture.h"
 
-namespace Fit4Qt {
+namespace Fit {
 
 ColumnFixture::ColumnFixture(QObject *parent) :
     Fixture(parent)
 {
 }
 
-} // namespace Fit4Qt
+} // namespace Fit
