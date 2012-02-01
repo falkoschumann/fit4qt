@@ -5,3 +5,5 @@ SUBDIRS += \
     parse
 
 CONFIG += ordered
+
+OTHER_FILES = runtests.sh
