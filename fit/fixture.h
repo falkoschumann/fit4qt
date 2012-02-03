@@ -29,9 +29,15 @@
 #ifndef FIT_FIXTURE_H
 #define FIT_FIXTURE_H
 
-#include <QObject>
+#include "counts.h"
+
+#include <QtCore/QHash>
+#include <QtCore/QObject>
+#include <QtCore/QVariant>
 
 namespace Fit {
+
+class Parse;
 
 class Fixture : public QObject
 {
@@ -41,6 +47,10 @@ public:
     static QString escape(const QString &);
 
     explicit Fixture(QObject *parent = 0);
+    void doTables(Parse *table);
+
+    QHash<QString, QVariant> summary;
+    Counts counts;
 };
 
 } // namespace Fit

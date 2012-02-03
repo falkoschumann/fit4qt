@@ -26,29 +26,26 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "fixture.h"
+#include "counts.h"
 
 namespace Fit {
 
-QString Fixture::escape(const QString &string) {
-    QString replaced(string);
-    replaced.replace("&", "&amp;");
-    replaced.replace("<", "&lt;");
-    replaced.replace("  ", " &nbsp;");
-    replaced.replace("\r\n", "<br />");
-    replaced.replace("\r", "<br />");
-    replaced.replace("\n", "<br />");
-    return replaced;
-}
+Counts::Counts() :
+    right(0),
+    wrong(0),
+    ignores(0),
+    exceptions(0)
 
-Fixture::Fixture(QObject *parent) :
-    QObject(parent)
 {
 }
 
-void Fixture::doTables(Parse *table)
+QString Counts::toString() const
 {
-    // TODO implement stub method
+    return QString("%1 right, %2 wrong, %3 ignored, %4 exceptions")
+            .arg(right)
+            .arg(wrong)
+            .arg(ignores)
+            .arg(exceptions);
 }
 
 } // namespace Fit

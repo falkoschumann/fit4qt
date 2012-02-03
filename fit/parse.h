@@ -47,7 +47,6 @@ public:
           int level = 0,
           int offset = 0) throw (ParseException);
     ~Parse();
-
     void print(QTextStream &out);
 
     QString leader;

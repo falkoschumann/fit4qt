@@ -26,29 +26,25 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "fixture.h"
+#ifndef FIT_COUNTS_H
+#define FIT_COUNTS_H
+
+#include <QtCore/QString>
 
 namespace Fit {
 
-QString Fixture::escape(const QString &string) {
-    QString replaced(string);
-    replaced.replace("&", "&amp;");
-    replaced.replace("<", "&lt;");
-    replaced.replace("  ", " &nbsp;");
-    replaced.replace("\r\n", "<br />");
-    replaced.replace("\r", "<br />");
-    replaced.replace("\n", "<br />");
-    return replaced;
-}
-
-Fixture::Fixture(QObject *parent) :
-    QObject(parent)
+class Counts
 {
-}
+public:
+    Counts();
+    QString toString() const;
 
-void Fixture::doTables(Parse *table)
-{
-    // TODO implement stub method
-}
+    int right;
+    int wrong;
+    int ignores;
+    int exceptions;
+};
 
 } // namespace Fit
+
+#endif // FIT_COUNTS_H

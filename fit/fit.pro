@@ -21,7 +21,8 @@ SOURCES += main.cpp \
     columnfixture.cpp \
     rowfixture.cpp \
     actionfixture.cpp \
-    filerunner.cpp
+    filerunner.cpp \
+    counts.cpp
 
 HEADERS += \
     parse.h \
@@ -30,4 +31,5 @@ HEADERS += \
     rowfixture.h \
     actionfixture.h \
     filerunner.h \
-    parseexception.h
+    parseexception.h \
+    counts.h

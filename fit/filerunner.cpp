@@ -28,11 +28,77 @@
 
 #include "filerunner.h"
 
+#include "fixture.h"
+#include "parse.h"
+
+#include <QtCore/QDateTime>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+
+#include <iostream>
+
 namespace Fit {
 
 FileRunner::FileRunner(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    fixture(new Fixture(this))
 {
+}
+
+int FileRunner::run(int argc, char *argv[])
+{
+    if (!args(argc, argv)) return -1;
+    process();
+    return exit();
+}
+
+int FileRunner::args(int argc, char *argv[])
+{
+    if (argc != 3) {
+        std::cout << "usage: fit input-file output-file" << std::endl;
+        return -1;
+    }
+
+    QFile in(argv[1]);
+    QFile *out = new QFile(argv[2]);
+    QFileInfo inFileInfo(in);
+    QFileInfo outFileInfo(*out);
+    fixture->summary["input file"] = inFileInfo.absoluteFilePath();
+    fixture->summary["input update"] = inFileInfo.lastModified();
+    fixture->summary["output file"] = outFileInfo.absoluteFilePath();
+
+    if (!in.open(QIODevice::ReadOnly)) {
+        std::cerr << "Can not open input file for reading: "
+                  << qPrintable(in.errorString())
+                  << std::endl;
+        return -1;
+    }
+    input = in.readAll();
+
+    if (!out->open(QIODevice::WriteOnly)) {
+        std::cerr << "Can not open input file for writing: "
+                  << qPrintable(out->errorString())
+                  << std::endl;
+        return -1;
+    }
+    output.setDevice(out);
+}
+
+void FileRunner::process()
+{
+    QStringList tags;
+    tags << "table" << "tr" << "td";
+    tables = new Parse(input, tags);
+    fixture->doTables(tables);
+
+    tables->print(output);
+}
+
+int FileRunner::exit()
+{
+    //output.flush();
+    std::cerr << fixture->counts.toString().toStdString() << std::endl;
+    return fixture->counts.wrong + fixture->counts.exceptions;
 }
 
 } // namespace Fit
