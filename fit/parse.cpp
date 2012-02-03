@@ -28,6 +28,8 @@
 
 #include "parse.h"
 
+#include <QtCore/QTextStream>
+
 namespace Fit {
 
 QStringList Parse::tags = (QStringList() << "table" << "tr" << "td");
@@ -39,6 +41,7 @@ Parse::Parse(const QString &text, const QStringList &tags, int level, int offset
     QString lc = text.toLower();
     int startTag = lc.indexOf("<"+tags[level]);
     int endTag = lc.indexOf(">", startTag) + 1;
+//    int startEnd = lc.indexOf("</"+tags[level], endTag);
     int startEnd = findMatchingEndTag(lc, endTag, tags[level], offset);
     int endEnd = lc.indexOf(">", startEnd) + 1;
     int startMore = lc.indexOf("<"+tags[level], endEnd);
@@ -109,6 +112,21 @@ int Parse::findMatchingEndTag(const QString &lc, int matchFromHere, const QStrin
         }
     }
     return startEnd;
+}
+
+void Parse::print(QTextStream &out)
+{
+    out << leader;
+    out << tag;
+    if (parts)
+        parts->print(out);
+    else
+        out << body;
+    out << end;
+    if (more)
+        more->print(out);
+    else
+        out << trailer;
 }
 
 } // namespace Fit

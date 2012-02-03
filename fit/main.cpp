@@ -26,11 +26,58 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <QtCore/QCoreApplication>
+#include "parse.h"
+#include "parseexception.h"
+
+#include <QtCore/QFile>
+#include <QtCore/QTextStream>
+
+#include <iostream>
+
+using namespace Fit;
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
-    
-    return a.exec();
+    if (argc != 3) {
+        printf("usage: fit input-file output-file\n");
+        return -1;
+    }
+
+    QString inputFilename(argv[1]);
+    std::cout << "input file: " << inputFilename.toStdString() << std::endl;
+
+    QString outputFilename(argv[2]);
+    std::cout << "output file: " << outputFilename.toStdString() << std::endl;
+
+    QFile inputFile(inputFilename);
+    if (!inputFile.open(QIODevice::ReadOnly)) {
+        std::cerr << "Can not open input file for reading: "
+                  << qPrintable(inputFile.errorString())
+                  << std::endl;
+        return -1;
+    }
+
+    QTextStream in(&inputFile);
+    QString input = in.readAll();
+
+    QStringList tags;
+    tags << "table";
+    try {
+        Parse parse(input, tags);
+
+        QFile outputFile(outputFilename);
+        if (!outputFile.open(QIODevice::WriteOnly)) {
+            std::cerr << "Can not open input file for writing: "
+                      << qPrintable(inputFile.errorString())
+                      << std::endl;
+            return -1;
+        }
+        QTextStream out(&outputFile);
+        parse.print(out);
+    } catch (const ParseException &ex) {
+        std::cout << "error: " << ex.message().toStdString() << std::endl;
+        return -1;
+    }
+
+    return 0;
 }

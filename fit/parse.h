@@ -33,6 +33,8 @@
 
 #include <QtCore/QStringList>
 
+class QTextStream;
+
 namespace Fit {
 
 class Parse
@@ -45,7 +47,9 @@ public:
           int level = 0,
           int offset = 0) throw (ParseException);
     ~Parse();
-    
+
+    void print(QTextStream &out);
+
     QString leader;
     QString tag;
     QString body;
