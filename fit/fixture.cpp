@@ -28,6 +28,8 @@
 
 #include "fixture.h"
 
+#include "parse.h"
+
 namespace Fit {
 
 QString Fixture::escape(const QString &string) {
@@ -46,9 +48,68 @@ Fixture::Fixture(QObject *parent) :
 {
 }
 
+// Traversal //////////////////////////
+
 void Fixture::doTables(Parse *table)
 {
-    // TODO implement stub method
+    doRows(table->parts->more);
+}
+
+void Fixture::doRows(Parse *rows)
+{
+    while (rows) {
+        Parse *more = rows->more;
+        doRow(rows);
+        rows = more;
+    }
+}
+
+void Fixture::doRow(Parse *row)
+{
+    doCells(row->parts);
+}
+
+void Fixture::doCells(Parse *cells)
+{
+    for (int i = 0; cells; ++i) {
+        //        try {
+        doCell(cells, i);
+        //        } catch (Exception e) {
+        //            exception(cells, e);
+        //        }
+        cells = cells->more;
+    }
+}
+
+void Fixture::doCell(Parse *cell, int columnNumber)
+{
+    ignore(cell);
+}
+
+// Annotation ///////////////////////////////
+
+QString Fixture::green("#cfffcf");
+QString Fixture::red("#ffcfcf");
+QString Fixture::gray("#efefef");
+QString Fixture::yellow("#ffffcf");
+
+void Fixture::right(Parse *cell)
+{
+    cell->addToTag(" bgcolor=\"" + green + "\"");
+    counts.right++;
+}
+
+void Fixture::wrong(Parse *cell)
+{
+    cell->addToTag(" bgcolor=\"" + red + "\"");
+    cell->body = escape(cell->text());
+    counts.wrong++;
+}
+
+void Fixture::ignore(Parse *cell)
+{
+    cell->addToTag(" bgcolor=\"" + gray + "\"");
+    counts.ignores++;
 }
 
 } // namespace Fit

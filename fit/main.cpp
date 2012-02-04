@@ -32,5 +32,4 @@ int main(int argc, char *argv[])
 {
     Fit::FileRunner fileRunner;
     return fileRunner.run(argc, argv);
-
 }

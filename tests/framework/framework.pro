@@ -16,10 +16,12 @@ TEMPLATE = app
 SOURCES += \
     ../../fit/fixture.cpp \
     frameworktest.cpp \
+    ../../fit/parse.cpp \
     ../../fit/counts.cpp
 
 HEADERS += \
     ../../fit/fixture.h \
+    ../../fit/parse.h \
     ../../fit/counts.h
 
 INCLUDEPATH += ../../

@@ -46,8 +46,21 @@ class Fixture : public QObject
 public:
     static QString escape(const QString &);
 
+    static QString green;
+    static QString red;
+    static QString gray;
+    static QString yellow;
+
     explicit Fixture(QObject *parent = 0);
     void doTables(Parse *table);
+    void doRows(Parse *rows);
+    void doRow(Parse *row);
+    void doCells(Parse *cells);
+    void doCell(Parse *cell, int columnNumber);
+
+    void right(Parse *cell);
+    void wrong(Parse *cell);
+    void ignore (Parse *cell);
 
     QHash<QString, QVariant> summary;
     Counts counts;

@@ -41,7 +41,7 @@ Parse::Parse(const QString &text, const QStringList &tags, int level, int offset
     QString lc = text.toLower();
     int startTag = lc.indexOf("<"+tags[level]);
     int endTag = lc.indexOf(">", startTag) + 1;
-//    int startEnd = lc.indexOf("</"+tags[level], endTag);
+    //    int startEnd = lc.indexOf("</"+tags[level], endTag);
     int startEnd = findMatchingEndTag(lc, endTag, tags[level], offset);
     int endEnd = lc.indexOf(">", startEnd) + 1;
     int startMore = lc.indexOf("<"+tags[level], endEnd);
@@ -85,6 +85,11 @@ Parse::~Parse()
     }
 }
 
+QString Parse::text()
+{
+    // TODO implement method stub
+}
+
 int Parse::findMatchingEndTag(const QString &lc, int matchFromHere, const QString &tag, int offset) throw (ParseException)
 {
     int fromHere = matchFromHere;
@@ -112,6 +117,12 @@ int Parse::findMatchingEndTag(const QString &lc, int matchFromHere, const QStrin
         }
     }
     return startEnd;
+}
+
+void Parse::addToTag(const QString &text)
+{
+    int last = tag.length() - 1;
+    tag = tag.mid(0, last) + text + ">";
 }
 
 void Parse::print(QTextStream &out)
