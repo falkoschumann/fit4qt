@@ -26,48 +26,64 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef FIT_PARSE_H
-#define FIT_PARSE_H
+#include "primitivefixture.h"
 
-#include "parseexception.h"
+#include "parse.h"
 
-#include <QtCore/QStringList>
-
-class QTextStream;
+#include <QtCore/QVariant>
 
 namespace Fit {
 
-class Parse
+long PrimitiveFixture::parseLong(Parse *cell)
 {
-public:
-    static QStringList tags;
+    return QVariant(cell->text()).toLongLong();
+}
 
-    Parse(const QString &text,
-          const QStringList &tags = Parse::tags,
-          int level = 0,
-          int offset = 0) throw (ParseException);
-    ~Parse();
-    QString text();
-    void addToTag(const QString &text);
-    void addToBody(const QString &text);
-    void print(QTextStream &out);
+double PrimitiveFixture::parseDouble(Parse *cell)
+{
+    return QVariant(cell->text()).toDouble();
+}
 
-    QString leader;
-    QString tag;
-    QString body;
-    QString end;
-    QString trailer;
+bool PrimitiveFixture::parseBool(Parse *cell)
+{
+    return QVariant(cell->text()).toBool();
+}
 
-    Parse *more;
-    Parse *parts;
+PrimitiveFixture::PrimitiveFixture(QObject *parent) :
+    Fit::Fixture(parent)
+{
+}
 
-protected:
-    static int findMatchingEndTag(const QString &lc,
-                                  int matchFromHere,
-                                  const QString &tag,
-                                  int offset) throw (ParseException);
-};
+void PrimitiveFixture::check(Parse *cell, const QString &value)
+{
+    if (cell->text() == value)
+        right(cell);
+    else
+        wrong(cell, value);
+}
+
+void PrimitiveFixture::check(Parse *cell, long value)
+{
+    if (parseLong(cell) == value)
+        right(cell);
+    else
+        wrong(cell, QString::number(value));
+}
+
+void PrimitiveFixture::check(Parse *cell, double value)
+{
+    if (parseDouble(cell) == value)
+        right(cell);
+    else
+        wrong(cell, QString::number(value));
+}
+
+void PrimitiveFixture::check(Parse *cell, bool value)
+{
+    if (parseBool(cell) == value)
+        right(cell);
+    else
+        wrong(cell, QString::number(value));
+}
 
 } // namespace Fit
-
-#endif // FIT_PARSE_H

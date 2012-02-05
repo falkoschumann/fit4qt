@@ -26,48 +26,33 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef FIT_PARSE_H
-#define FIT_PARSE_H
+#ifndef FIT_PRIMITIVEFIXTURE_H
+#define FIT_PRIMITIVEFIXTURE_H
 
-#include "parseexception.h"
+#include "fixture.h"
 
-#include <QtCore/QStringList>
-
-class QTextStream;
+class QVariant;
 
 namespace Fit {
 
-class Parse
+class Parse;
+
+class PrimitiveFixture : public Fit::Fixture
 {
+    Q_OBJECT
+
 public:
-    static QStringList tags;
+    static long parseLong(Parse *cell);
+    static double parseDouble(Parse *cell);
+    static bool parseBool(Parse *cell);
 
-    Parse(const QString &text,
-          const QStringList &tags = Parse::tags,
-          int level = 0,
-          int offset = 0) throw (ParseException);
-    ~Parse();
-    QString text();
-    void addToTag(const QString &text);
-    void addToBody(const QString &text);
-    void print(QTextStream &out);
-
-    QString leader;
-    QString tag;
-    QString body;
-    QString end;
-    QString trailer;
-
-    Parse *more;
-    Parse *parts;
-
-protected:
-    static int findMatchingEndTag(const QString &lc,
-                                  int matchFromHere,
-                                  const QString &tag,
-                                  int offset) throw (ParseException);
+    explicit PrimitiveFixture(QObject *parent = 0);
+    void check(Parse *cell, const QString &value);
+    void check(Parse *cell, long value);
+    void check(Parse *cell, double value);
+    void check(Parse *cell, bool value);
 };
 
 } // namespace Fit
 
-#endif // FIT_PARSE_H
+#endif // FIT_PRIMITIVEFIXTURE_H

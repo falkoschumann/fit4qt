@@ -125,6 +125,11 @@ void Parse::addToTag(const QString &text)
     tag = tag.mid(0, last) + text + ">";
 }
 
+void Parse::addToBody(const QString &text)
+{
+    body = body + text;
+}
+
 void Parse::print(QTextStream &out)
 {
     out << leader;

@@ -9,7 +9,7 @@ QT       += core
 QT       -= gui
 
 TARGET = fit
-CONFIG   += console
+CONFIG   += console warn_on
 CONFIG   -= app_bundle
 
 TEMPLATE = app
@@ -22,7 +22,9 @@ SOURCES += main.cpp \
     rowfixture.cpp \
     actionfixture.cpp \
     filerunner.cpp \
-    counts.cpp
+    counts.cpp \
+    primitivefixture.cpp \
+    ../eg/arithmeticfixture.cpp
 
 HEADERS += \
     parse.h \
@@ -32,4 +34,8 @@ HEADERS += \
     actionfixture.h \
     filerunner.h \
     parseexception.h \
-    counts.h
+    counts.h \
+    primitivefixture.h \
+    ../eg/arithmeticfixture.h
+
+INCLUDEPATH += ../

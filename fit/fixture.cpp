@@ -32,6 +32,11 @@
 
 namespace Fit {
 
+QString Fixture::label(const QString &string)
+{
+    return " <font size=-1 color=\"#c08080\"><i>" + string + "</i></font>";
+}
+
 QString Fixture::escape(const QString &string) {
     QString replaced(string);
     replaced.replace("&", "&amp;");
@@ -104,6 +109,12 @@ void Fixture::wrong(Parse *cell)
     cell->addToTag(" bgcolor=\"" + red + "\"");
     cell->body = escape(cell->text());
     counts.wrong++;
+}
+
+void Fixture::wrong(Parse *cell, const QString &actual)
+{
+    wrong(cell);
+    cell->addToBody(label("expected") + "<hr>" + escape(actual) + label("actual"));
 }
 
 void Fixture::ignore(Parse *cell)

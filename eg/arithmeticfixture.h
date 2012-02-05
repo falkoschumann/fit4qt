@@ -26,48 +26,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef FIT_PARSE_H
-#define FIT_PARSE_H
+#ifndef EG_ARITHMETICFIXTURE_H
+#define EG_ARITHMETICFIXTURE_H
 
-#include "parseexception.h"
+#include <fit/primitivefixture.h>
 
-#include <QtCore/QStringList>
+namespace Eg {
 
-class QTextStream;
-
-namespace Fit {
-
-class Parse
+class ArithmeticFixture : public Fit::PrimitiveFixture
 {
+    Q_OBJECT
+
 public:
-    static QStringList tags;
+    explicit ArithmeticFixture(QObject *parent = 0);
 
-    Parse(const QString &text,
-          const QStringList &tags = Parse::tags,
-          int level = 0,
-          int offset = 0) throw (ParseException);
-    ~Parse();
-    QString text();
-    void addToTag(const QString &text);
-    void addToBody(const QString &text);
-    void print(QTextStream &out);
+    int x;
+    int y;
 
-    QString leader;
-    QString tag;
-    QString body;
-    QString end;
-    QString trailer;
-
-    Parse *more;
-    Parse *parts;
-
-protected:
-    static int findMatchingEndTag(const QString &lc,
-                                  int matchFromHere,
-                                  const QString &tag,
-                                  int offset) throw (ParseException);
+    void doRows(Fit::Parse *rows);
+    void doCell(Fit::Parse *cell, int column);
 };
 
-} // namespace Fit
+} // namespace Eg
 
-#endif // FIT_PARSE_H
+#endif // EG_ARITHMETICFIXTURE_H

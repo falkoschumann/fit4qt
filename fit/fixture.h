@@ -44,6 +44,7 @@ class Fixture : public QObject
     Q_OBJECT
 
 public:
+    static QString label(const QString &);
     static QString escape(const QString &);
 
     static QString green;
@@ -60,6 +61,7 @@ public:
 
     void right(Parse *cell);
     void wrong(Parse *cell);
+    void wrong(Parse *cell, const QString &actual);
     void ignore (Parse *cell);
 
     QHash<QString, QVariant> summary;
