@@ -14,17 +14,17 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 SOURCES += \
-    ../../fit/fixture.cpp \
+    ../../src/fit/fixture.cpp \
     frameworktest.cpp \
-    ../../fit/parse.cpp \
-    ../../fit/counts.cpp
+    ../../src/fit/parse.cpp \
+    ../../src/fit/counts.cpp
 
 HEADERS += \
-    ../../fit/fixture.h \
-    ../../fit/parse.h \
-    ../../fit/counts.h
+    ../../src/fit/fixture.h \
+    ../../src/fit/parse.h \
+    ../../src/fit/counts.h
 
-INCLUDEPATH += ../../
+INCLUDEPATH += ../../src/
 
 QMAKE_CXXFLAGS += -fprofile-arcs -ftest-coverage
 LIBS += -L/Developer/usr/lib -lprofile_rt

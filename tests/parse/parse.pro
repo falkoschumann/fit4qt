@@ -14,15 +14,15 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 SOURCES += \
-    ../../fit/parse.cpp \
+    ../../src/fit/parse.cpp \
     parsetest.cpp
 
 #DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
-    ../../fit/parse.h
+    ../../src/fit/parse.h
 
-INCLUDEPATH += ../../
+INCLUDEPATH += ../../src/
 
 QMAKE_CXXFLAGS += -fprofile-arcs -ftest-coverage
 LIBS += -L/Developer/usr/lib -lprofile_rt
