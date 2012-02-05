@@ -2,7 +2,8 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     framework \
-    parse
+    parse \
+    filerunner
 
 CONFIG += ordered
 

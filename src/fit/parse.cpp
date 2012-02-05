@@ -126,6 +126,11 @@ int Parse::findMatchingEndTag(const QString &lc, int matchFromHere, const QStrin
     return startEnd;
 }
 
+Parse* Parse::leaf()
+{
+    return parts ? parts->leaf() : this;
+}
+
 Parse* Parse::at(int i)
 {
     return i == 0 || !more ? this : more->at(i-1);

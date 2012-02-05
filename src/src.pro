@@ -4,16 +4,14 @@
 #
 #-------------------------------------------------
 
-QT       += core
-
-QT       -= gui
+QT += core
+QT -= gui
 
 TARGET = fit
-CONFIG   += console warn_on
-CONFIG   -= app_bundle
+CONFIG += console warn_on
+CONFIG -= app_bundle
 
 TEMPLATE = app
-
 
 SOURCES += fit/main.cpp \
     fit/parse.cpp \

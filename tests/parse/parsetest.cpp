@@ -30,7 +30,7 @@
 
 #include <QtTest/QtTest>
 
-namespace Fit {
+using namespace Fit;
 
 class ParseTest : public QObject
 {
@@ -69,8 +69,6 @@ void ParseTest::testIterating()
     QCOMPARE(p.parts->parts->more->more->body, QString("three"));
 }
 
-} // namespace Fit
-
-QTEST_APPLESS_MAIN(Fit::ParseTest)
+QTEST_APPLESS_MAIN(ParseTest)
 
 #include "parsetest.moc"

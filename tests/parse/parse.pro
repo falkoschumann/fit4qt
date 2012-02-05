@@ -4,20 +4,18 @@
 #
 #-------------------------------------------------
 
-QT       += testlib
-QT       -= gui
+QT += testlib
+QT -= gui
 
 TARGET = parsetest
-CONFIG   += console
-CONFIG   -= app_bundle
+CONFIG += console
+CONFIG -= app_bundle
 
 TEMPLATE = app
 
 SOURCES += \
-    ../../src/fit/parse.cpp \
-    parsetest.cpp
-
-#DEFINES += SRCDIR=\\\"$$PWD/\\\"
+    parsetest.cpp \
+    ../../src/fit/parse.cpp
 
 HEADERS += \
     ../../src/fit/parse.h

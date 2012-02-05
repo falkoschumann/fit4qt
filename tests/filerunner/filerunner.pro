@@ -1,27 +1,29 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2012-01-13T23:25:27
+# Project created by QtCreator 2012-02-05T23:44:12
 #
 #-------------------------------------------------
 
 QT += testlib
 QT -= gui
 
-TARGET = frameworktest
+TARGET = filerunnertest
 CONFIG += console
 CONFIG -= app_bundle
 
 TEMPLATE = app
 
 SOURCES += \
-    frameworktest.cpp \
-    ../../src/fit/fixture.cpp \
+    filerunnertest.cpp \
+    ../../src/fit/filerunner.cpp \
     ../../src/fit/parse.cpp \
+    ../../src/fit/fixture.cpp \
     ../../src/fit/counts.cpp
 
 HEADERS += \
-    ../../src/fit/fixture.h \
+    ../../src/fit/filerunner.h \
     ../../src/fit/parse.h \
+    ../../src/fit/fixture.h \
     ../../src/fit/counts.h
 
 INCLUDEPATH += ../../src/

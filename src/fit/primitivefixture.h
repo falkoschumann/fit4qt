@@ -46,7 +46,7 @@ public:
     static double parseDouble(Parse *cell);
     static bool parseBool(Parse *cell);
 
-    explicit PrimitiveFixture(QObject *parent = 0);
+    PrimitiveFixture(QObject *parent = 0);
     void check(Parse *cell, const QString &value);
     void check(Parse *cell, long value);
     void check(Parse *cell, double value);

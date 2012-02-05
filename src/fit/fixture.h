@@ -63,7 +63,7 @@ public:
         QString d(long scale);
     };
 
-    explicit Fixture(QObject *parent = 0);
+    Fixture(QObject *parent = 0);
     virtual ~Fixture();
 
     // Traversal
