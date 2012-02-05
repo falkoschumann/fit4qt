@@ -27,9 +27,23 @@
  */
 
 #include "filerunner.h"
+#include "fixture.h"
+
+#include <eg/arithmeticfixture.h>
+
+#include <iostream>
+
+using namespace Fit;
 
 int main(int argc, char *argv[])
 {
-    Fit::FileRunner fileRunner;
-    return fileRunner.run(argc, argv);
+    Fixture::fixtures << &Eg::ArithmeticFixture::staticMetaObject;
+
+    FileRunner fileRunner;
+    try {
+        return fileRunner.run(argc, argv);
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return -1;
+    }
 }

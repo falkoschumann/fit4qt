@@ -30,32 +30,141 @@
 
 #include "parse.h"
 
+#include <QtCore/QDateTime>
+#include <QtCore/QDebug>
+
 namespace Fit {
 
-QString Fixture::label(const QString &string)
+QSet<const QMetaObject*> Fixture::fixtures;
+
+Fixture::RunTime::RunTime() :
+    start(QDateTime::currentMSecsSinceEpoch()),
+    elapsed(0)
 {
-    return " <font size=-1 color=\"#c08080\"><i>" + string + "</i></font>";
 }
 
-QString Fixture::escape(const QString &string) {
-    QString replaced(string);
-    replaced.replace("&", "&amp;");
-    replaced.replace("<", "&lt;");
-    replaced.replace("  ", " &nbsp;");
-    replaced.replace("\r\n", "<br />");
-    replaced.replace("\r", "<br />");
-    replaced.replace("\n", "<br />");
-    return replaced;
+QString Fixture::RunTime::toString()
+{
+    elapsed = QDateTime::currentMSecsSinceEpoch() - start;
+    if (elapsed > 600000)
+        return d(3600000) + ":" + d(600000) + d(60000) + ":" + d(10000) +d(1000);
+    else
+        return d(60000) + ":" + d(10000) + d(1000) + "." + d(100) + d(10);
+}
+
+QString Fixture::RunTime::d(long scale)
+{
+    long report = elapsed / scale;
+    elapsed -= report * scale;
+    return QString::number(report);
 }
 
 Fixture::Fixture(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    summary(new QHash<QString, QVariant>()),
+    counts(new Counts)
 {
+}
+
+Fixture::~Fixture()
+{
+    delete summary;
+    delete counts;
 }
 
 // Traversal //////////////////////////
 
-void Fixture::doTables(Parse *table)
+void Fixture::doTables(Parse *tables)
+{
+    summary->insert("run date", QDateTime());
+    QVariant runTime;
+    runTime.setValue(RunTime());
+    summary->insert("run elapsed time", runTime);
+    if (tables) {
+        Parse *fixtureName = getFixtureName(tables);
+        if (fixtureName) {
+            try {
+                Fixture *fixture = getLinkedFixtureWithArgs(tables);
+                fixture->interpretTables(tables);
+            } catch (const std::exception &e) {
+                exception(fixtureName, e);
+                interpretFollowingTables(tables);
+            }
+        }
+    }
+}
+
+void Fixture::interpretTables(Parse *tables)
+{
+    try { // Don't create the first fixture again, because creation may do something important.
+        getArgsForTable(tables); // get them again for the new fixture object
+        doTable(tables);
+    } catch (const std::exception &ex) {
+        exception(getFixtureName(tables), ex);
+        return;
+    }
+    interpretFollowingTables(tables);
+}
+
+void Fixture::interpretFollowingTables(Parse *tables)
+{
+    //listener.tableFinished(tables);
+    tables = tables->more;
+    while (tables) {
+        Parse *fixtureName = getFixtureName(tables);
+        if (fixtureName) {
+            try {
+                Fixture *fixture = getLinkedFixtureWithArgs(tables);
+                fixture->doTable(tables);
+            } catch (const std::exception &e) {
+                exception(fixtureName, e);
+            }
+        }
+        //listener.tableFinished(tables);
+        tables = tables->more;
+    }
+}
+
+Fixture* Fixture::getLinkedFixtureWithArgs(Parse *tables)
+{
+    Parse *header = tables->at(0, 0, 0);
+    Fixture *fixture = loadFixture(header->text());
+    fixture->counts = counts;
+    fixture->summary = summary;
+    fixture->getArgsForTable(tables);
+    return fixture;
+}
+
+Parse* Fixture::getFixtureName(Parse *tables)
+{
+    return tables->at(0, 0 ,0);
+}
+
+Fixture* Fixture::loadFixture(const QString &fixtureName)
+{
+    foreach (const QMetaObject* meta, fixtures) {
+        if (meta->className() == fixtureName) {
+            QObject *obj = meta->newInstance();
+            if (!obj)
+                throw std::runtime_error(QString("\"%1\" was found, but it's not a fixture.")
+                                         .arg(fixtureName).toStdString());
+            return qobject_cast<Fixture*>(obj);
+        }
+    }
+    throw std::runtime_error(QString("The fixture \"%1\" was not found.")
+                             .arg(fixtureName).toStdString());
+}
+
+void Fixture::getArgsForTable(Parse *table)
+{
+    QStringList argumentList;
+    Parse *parameters = table->parts->parts->more;
+    for (; parameters ; parameters = parameters->more)
+        argumentList.append(parameters->text());
+    args = argumentList;
+}
+
+void Fixture::doTable(Parse *table)
 {
     doRows(table->parts->more);
 }
@@ -77,17 +186,18 @@ void Fixture::doRow(Parse *row)
 void Fixture::doCells(Parse *cells)
 {
     for (int i = 0; cells; ++i) {
-        //        try {
-        doCell(cells, i);
-        //        } catch (Exception e) {
-        //            exception(cells, e);
-        //        }
+        try {
+            doCell(cells, i);
+        } catch (const std::exception &e) {
+            exception(cells, e);
+        }
         cells = cells->more;
     }
 }
 
 void Fixture::doCell(Parse *cell, int columnNumber)
 {
+    Q_UNUSED(columnNumber)
     ignore(cell);
 }
 
@@ -101,14 +211,14 @@ QString Fixture::yellow("#ffffcf");
 void Fixture::right(Parse *cell)
 {
     cell->addToTag(" bgcolor=\"" + green + "\"");
-    counts.right++;
+    counts->right++;
 }
 
 void Fixture::wrong(Parse *cell)
 {
     cell->addToTag(" bgcolor=\"" + red + "\"");
     cell->body = escape(cell->text());
-    counts.wrong++;
+    counts->wrong++;
 }
 
 void Fixture::wrong(Parse *cell, const QString &actual)
@@ -120,7 +230,39 @@ void Fixture::wrong(Parse *cell, const QString &actual)
 void Fixture::ignore(Parse *cell)
 {
     cell->addToTag(" bgcolor=\"" + gray + "\"");
-    counts.ignores++;
+    counts->ignores++;
+}
+
+void Fixture::error(Parse *cell, const QString &message)
+{
+    cell->body = escape(cell->text());
+    cell->addToBody("<hr><pre>" + escape(message) + "</pre>");
+    cell->addToTag(" bgcolor=\"" + yellow + "\"");
+    counts->exceptions++;
+}
+
+void Fixture::exception(Parse *cell, const std::exception &exception)
+{
+    QString message(exception.what());
+    error(cell, message);
+}
+
+// Utility //////////////////////////////////
+
+QString Fixture::label(const QString &string)
+{
+    return " <font size=-1 color=\"#c08080\"><i>" + string + "</i></font>";
+}
+
+QString Fixture::escape(const QString &string) {
+    QString replaced(string);
+    replaced.replace("&", "&amp;");
+    replaced.replace("<", "&lt;");
+    replaced.replace("  ", " &nbsp;");
+    replaced.replace("\r\n", "<br />");
+    replaced.replace("\r", "<br />");
+    replaced.replace("\n", "<br />");
+    return replaced;
 }
 
 } // namespace Fit

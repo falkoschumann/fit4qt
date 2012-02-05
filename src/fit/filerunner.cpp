@@ -47,58 +47,70 @@ FileRunner::FileRunner(QObject *parent) :
 
 int FileRunner::run(int argc, char *argv[])
 {
-    if (!args(argc, argv)) return -1;
-    process();
-    return exit();
-}
-
-int FileRunner::args(int argc, char *argv[])
-{
-    if (argc != 3) {
-        std::cout << "usage: fit input-file output-file" << std::endl;
-        return -1;
+    if (args(argc, argv)) {
+        process();
+        return exit();
     }
-
-    QFile in(argv[1]);
-    QFile *out = new QFile(argv[2]);
-    QFileInfo inFileInfo(in);
-    QFileInfo outFileInfo(*out);
-    fixture->summary["input file"] = inFileInfo.absoluteFilePath();
-    fixture->summary["input update"] = inFileInfo.lastModified();
-    fixture->summary["output file"] = outFileInfo.absoluteFilePath();
-
-    if (!in.open(QIODevice::ReadOnly)) {
-        std::cerr << "Can not open input file for reading: "
-                  << qPrintable(in.errorString())
-                  << std::endl;
-        return -1;
-    }
-    input = in.readAll();
-
-    if (!out->open(QIODevice::WriteOnly)) {
-        std::cerr << "Can not open input file for writing: "
-                  << qPrintable(out->errorString())
-                  << std::endl;
-        return -1;
-    }
-    output.setDevice(out);
+    return -1;
 }
 
 void FileRunner::process()
 {
-    QStringList tags;
-    tags << "table" << "tr" << "td";
-    tables = new Parse(input, tags);
-    fixture->doTables(tables);
-
+    try {
+        if (input.indexOf("<wiki>") >= 0) {
+            QStringList tags;
+            tags << "wiki" << "table" << "tr" << "td";
+            tables = new Parse(input, tags);
+            fixture->doTables(tables->parts);
+        } else {
+            QStringList tags;
+            tags << "table" << "tr" << "td";
+            tables = new Parse(input, tags);
+            fixture->doTables(tables);
+        }
+    } catch (const std::exception e) {
+        exception(e);
+    }
     tables->print(output);
+}
+
+bool FileRunner::args(int argc, char *argv[])
+{
+    if (argc != 3) {
+        std::cerr << "usage: fit input-file output-file";
+        return false;
+    }
+
+    QFile *in = new QFile(argv[1]);
+    QFile *out = new QFile(argv[2]);
+    QFileInfo fileInfo(*in);
+    fixture->summary->insert("input file", fileInfo.absoluteFilePath());
+    fixture->summary->insert("input update", fileInfo.lastModified());
+    fileInfo.setFile(*out);
+    fixture->summary->insert("output file", fileInfo.absoluteFilePath());
+    input = read(in);
+    out->open(QIODevice::WriteOnly);
+    output.setDevice(out);
+
+    return true;
+}
+
+QString FileRunner::read(QFile *input)
+{
+    input->open(QIODevice::ReadOnly);
+    return input->readAll();
+}
+
+void FileRunner::exception(const std::exception &e)
+{
+    tables = new Parse("body", "Unable to parse input. Input ignored.");
+    fixture->exception(tables, e);
 }
 
 int FileRunner::exit()
 {
-    //output.flush();
-    std::cerr << fixture->counts.toString().toStdString() << std::endl;
-    return fixture->counts.wrong + fixture->counts.exceptions;
+    std::cerr << fixture->counts->toString().toStdString() << std::endl;
+    return fixture->counts->wrong + fixture->counts->exceptions;
 }
 
 } // namespace Fit

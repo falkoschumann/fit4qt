@@ -29,7 +29,7 @@
 #ifndef FIT_PARSE_H
 #define FIT_PARSE_H
 
-#include "parseexception.h"
+#include <muspellheim/muspellheimexcept.h>
 
 #include <QtCore/QStringList>
 
@@ -40,32 +40,47 @@ namespace Fit {
 class Parse
 {
 public:
-    static QStringList tags;
-
-    Parse(const QString &text,
-          const QStringList &tags = Parse::tags,
-          int level = 0,
-          int offset = 0) throw (ParseException);
-    ~Parse();
-    QString text();
-    void addToTag(const QString &text);
-    void addToBody(const QString &text);
-    void print(QTextStream &out);
-
     QString leader;
     QString tag;
     QString body;
     QString end;
     QString trailer;
 
-    Parse *more;
     Parse *parts;
+    Parse *more;
+
+    Parse(const QString &tag, const QString &body, Parse *parts = 0, Parse *more = 0);
+
+    static QStringList tags;
+
+    Parse(const QString &text,
+          const QStringList &tags = Parse::tags,
+          int level = 0,
+          int offset = 0) throw (muspellheim::parse_exception);
+    ~Parse();
+    Parse* at(int i);
+    Parse* at(int i, int j);
+    Parse* at(int i, int j, int k);
+    QString text();
+    static QString htmlToText(QString s);
+    static QString unescape(QString s);
+    static QString condenseWhitespace(QString s);
+    void addToTag(const QString &text);
+    void addToBody(const QString &text);
+    void print(QTextStream &out);
+
 
 protected:
     static int findMatchingEndTag(const QString &lc,
                                   int matchFromHere,
                                   const QString &tag,
-                                  int offset) throw (ParseException);
+                                  int offset);
+
+private:
+    static QString removeNonBreakTags(QString s);
+    static QString unescapeSmartQuotes(QString s);
+    static QString unescapeEntities(QString s);
+    static QString normalizeLineBreaks(QString s);
 };
 
 } // namespace Fit

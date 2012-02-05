@@ -28,6 +28,8 @@
 
 #include "arithmeticfixture.h"
 
+#include <fit/parse.h>
+
 namespace Eg {
 
 ArithmeticFixture::ArithmeticFixture(QObject *parent) :
@@ -37,10 +39,36 @@ ArithmeticFixture::ArithmeticFixture(QObject *parent) :
 
 void ArithmeticFixture::doRows(Fit::Parse *rows)
 {
+    Fixture::doRows(rows->more); // skip column heads
 }
 
 void ArithmeticFixture::doCell(Fit::Parse *cell, int column)
 {
+    switch (column) {
+    case 0:
+        x = (int) parseLong(cell);
+        break;
+    case 1:
+        y = (int) parseLong(cell);
+        break;
+    case 2:
+        check(cell, (long) (x+y));
+        break;
+    case 3:
+        check(cell, (long) (x-y));
+        break;
+    case 4:
+        check(cell, (long) (x*y));
+        break;
+    case 5:
+        if (y == 0)
+            throw std::logic_error("arithmetic exception: division by zero");
+        check(cell, (long) (x/y));
+        break;
+    default:
+        ignore(cell);
+        break;
+    }
 }
 
 } // namespace Eg

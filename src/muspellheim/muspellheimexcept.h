@@ -26,25 +26,29 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef FIT_PARSEEXCEPTION_H
-#define FIT_PARSEEXCEPTION_H
+#ifndef MUSPELLHEIM_PARSE_EXCEPTION_H
+#define MUSPELLHEIM_PARSE_EXCEPTION_H
 
-#include <QtCore/QString>
+#include <exception>
+#include <string>
+#include <stdexcept>
 
-namespace Fit {
+namespace muspellheim {
 
-class ParseException
+class parse_exception : public std::exception
 {
 public:
-    inline ParseException(const QString &message, int errorOffset) : m_message(message), m_errorOffset(errorOffset) {}
-    inline QString message() const { return m_message; }
-    inline int errorOffset() const { return m_errorOffset; }
+    explicit parse_exception(const std::string &message, int errorOffset) throw() :
+        m_message(message), m_errorOffset(errorOffset) {}
+    ~parse_exception() throw() {}
+    const char* what() const throw() { return m_message.c_str(); }
+    int errorOffset() const throw() { return m_errorOffset; }
 
 private:
-    const QString m_message;
+    const std::string m_message;
     const int m_errorOffset;
 };
 
-} // namespace Fit
+} // namespace muspellheim
 
-#endif // FIT_PARSEEXCEPTION_H
+#endif // MUSPELLHEIM_PARSE_EXCEPTION_H

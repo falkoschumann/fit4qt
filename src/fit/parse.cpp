@@ -30,45 +30,57 @@
 
 #include <QtCore/QTextStream>
 
+using namespace muspellheim;
+
 namespace Fit {
+
+Parse::Parse(const QString &tag, const QString &body, Parse *parts, Parse *more) :
+    leader("\n"),
+    tag("<" + tag + ">"),
+    body(body),
+    end("</" + tag + ">"),
+    trailer(QString()),
+    parts(parts),
+    more(more)
+{
+}
 
 QStringList Parse::tags = (QStringList() << "table" << "tr" << "td");
 
-Parse::Parse(const QString &text, const QStringList &tags, int level, int offset) throw (ParseException) :
-    more(0),
-    parts(0)
+Parse::Parse(const QString &text, const QStringList &tags, int level, int offset) throw (parse_exception) :
+    parts(0),
+    more(0)
 {
     QString lc = text.toLower();
-    int startTag = lc.indexOf("<"+tags[level]);
+    int startTag = lc.indexOf("<" + tags[level]);
     int endTag = lc.indexOf(">", startTag) + 1;
     //    int startEnd = lc.indexOf("</"+tags[level], endTag);
     int startEnd = findMatchingEndTag(lc, endTag, tags[level], offset);
     int endEnd = lc.indexOf(">", startEnd) + 1;
-    int startMore = lc.indexOf("<"+tags[level], endEnd);
-    if (startTag<0 || endTag<0 || startEnd<0 || endEnd<0) {
-        throw ParseException("Can't find tag: "+tags[level], offset);
+    int startMore = lc.indexOf("<" + tags[level], endEnd);
+    if (startTag < 0 || endTag < 0 || startEnd < 0 || endEnd < 0) {
+        throw parse_exception(QString("Can't find tag: "+tags[level]).toStdString(), offset);
     }
 
     leader = text.mid(0, startTag);
-    tag = text.mid(startTag, endTag-startTag);
-    body = text.mid(endTag, startEnd-endTag);
-    end = text.mid(startEnd, endEnd-startEnd);
+    tag = text.mid(startTag, endTag - startTag);
+    body = text.mid(endTag, startEnd - endTag);
+    end = text.mid(startEnd, endEnd - startEnd);
     trailer = text.mid(endEnd);
 
     if (level+1 < tags.length()) {
-        parts = new Parse(body, tags, level+1, offset+endTag);
+        parts = new Parse(body, tags, level + 1, offset + endTag);
         body = QString();
-    }
-    else { // Check for nested table
+    } else { // Check for nested table
         int index = body.indexOf("<" + tags[0]);
         if (index >= 0) {
             parts = new Parse(body, tags, 0, offset + endTag);
-            body = "";
+            body = QString();
         }
     }
 
-    if (startMore>=0) {
-        more = new Parse(trailer, tags, level, offset+endEnd);
+    if (startMore >= 0) {
+        more = new Parse(trailer, tags, level, offset + endEnd);
         trailer = QString();
     }
 }
@@ -85,12 +97,7 @@ Parse::~Parse()
     }
 }
 
-QString Parse::text()
-{
-    // TODO implement method stub
-}
-
-int Parse::findMatchingEndTag(const QString &lc, int matchFromHere, const QString &tag, int offset) throw (ParseException)
+int Parse::findMatchingEndTag(const QString &lc, int matchFromHere, const QString &tag, int offset)
 {
     int fromHere = matchFromHere;
     int count = 1;
@@ -100,7 +107,7 @@ int Parse::findMatchingEndTag(const QString &lc, int matchFromHere, const QStrin
         int embeddedTagEnd = lc.indexOf("</" + tag, fromHere);
         // Which one is closer?
         if (embeddedTag < 0 && embeddedTagEnd < 0)
-            throw ParseException("Can't find tag: " + tag, offset);
+            throw parse_exception(QString("Can't find tag: " + tag).toStdString(), offset);
         if (embeddedTag < 0)
             embeddedTag = INT_MAX;
         if (embeddedTagEnd < 0)
@@ -117,6 +124,88 @@ int Parse::findMatchingEndTag(const QString &lc, int matchFromHere, const QStrin
         }
     }
     return startEnd;
+}
+
+Parse* Parse::at(int i)
+{
+    return i == 0 || !more ? this : more->at(i-1);
+}
+
+Parse* Parse::at(int i, int j)
+{
+    return at(i)->parts->at(j);
+}
+
+Parse* Parse::at(int i, int j, int k)
+{
+    return at(i, j)->parts->at(k);
+}
+
+QString Parse::text()
+{
+    return htmlToText(body);
+}
+
+QString Parse::htmlToText(QString s)
+{
+    s = normalizeLineBreaks(s);
+    s = removeNonBreakTags(s);
+    s = condenseWhitespace(s);
+    s = unescape(s);
+    return s;
+}
+
+QString Parse::removeNonBreakTags(QString s)
+{
+    int i=0, j;
+    while ((i=s.indexOf('<',i))>=0) {
+        if ((j=s.indexOf('>',i+1))>0) {
+            if (!(s.mid(i, (j+1) - i) == "<br />")) {
+                s = s.mid(0,i) + s.mid(j+1);
+            } else i++;
+        } else break;
+    }
+    return s;
+}
+
+QString Parse::unescape(QString s) {
+    s = s.replace("<br />", "\n");
+    s = unescapeEntities(s);
+    s = unescapeSmartQuotes(s);
+    return s;
+}
+
+QString Parse::unescapeSmartQuotes(QString s) {
+    s = s.replace('\u201c', '"');
+    s = s.replace('\u201d', '"');
+    s = s.replace('\u2018', '\'');
+    s = s.replace('\u2019', '\'');
+    return s;
+}
+
+QString Parse::unescapeEntities(QString s) {
+    s = s.replace("&lt;", "<");
+    s = s.replace("&gt;", ">");
+    s = s.replace("&nbsp;", " ");
+    s = s.replace("&quot;", "\"");
+    s = s.replace("&amp;", "&");
+    return s;
+}
+
+QString Parse::normalizeLineBreaks(QString s) {
+    s = s.replace("<\\s*br\\s*/?\\s*>", "<br />");
+    s = s.replace("<\\s*/\\s*p\\s*>\\s*<\\s*p( .*?)?>", "<br />");
+    return s;
+}
+
+QString Parse::condenseWhitespace(QString s) {
+    const char NON_BREAKING_SPACE = (char)160;
+
+    s = s.replace("\\s+", " ");
+    s = s.replace(NON_BREAKING_SPACE, ' ');
+    s = s.replace("&nbsp;", " ");
+    s = s.simplified();
+    return s;
 }
 
 void Parse::addToTag(const QString &text)

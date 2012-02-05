@@ -33,7 +33,7 @@ HEADERS += \
     fit/rowfixture.h \
     fit/actionfixture.h \
     fit/filerunner.h \
-    fit/parseexception.h \
     fit/counts.h \
     fit/primitivefixture.h \
-    eg/arithmeticfixture.h
+    eg/arithmeticfixture.h \
+    muspellheim/muspellheimexcept.h

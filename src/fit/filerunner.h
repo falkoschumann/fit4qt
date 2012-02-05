@@ -32,6 +32,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QTextStream>
 
+class QFile;
+
 namespace Fit {
 
 class Fixture;
@@ -42,17 +44,19 @@ class FileRunner : public QObject
     Q_OBJECT
 
 public:
-    explicit FileRunner(QObject *parent = 0);
-    int run(int argc, char *argv[]);
-    int args(int argc, char *argv[]);
-    void process();
-
     QString input;
     Parse *tables;
     Fixture *fixture;
     QTextStream output;
 
+    explicit FileRunner(QObject *parent = 0);
+    int run(int argc, char *argv[]);
+    void process();
+    bool args(int argc, char *argv[]);
+
 protected:
+    QString read(QFile *input);
+    void exception(const std::exception &e);
     int exit();
 };
 

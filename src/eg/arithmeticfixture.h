@@ -38,7 +38,7 @@ class ArithmeticFixture : public Fit::PrimitiveFixture
     Q_OBJECT
 
 public:
-    explicit ArithmeticFixture(QObject *parent = 0);
+    Q_INVOKABLE ArithmeticFixture(QObject *parent = 0);
 
     int x;
     int y;

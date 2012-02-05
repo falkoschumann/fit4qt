@@ -32,8 +32,12 @@
 #include "counts.h"
 
 #include <QtCore/QHash>
+#include <QtCore/QSet>
 #include <QtCore/QObject>
+#include <QtCore/QStringList>
 #include <QtCore/QVariant>
+
+#include <exception>
 
 namespace Fit {
 
@@ -44,30 +48,65 @@ class Fixture : public QObject
     Q_OBJECT
 
 public:
-    static QString label(const QString &);
-    static QString escape(const QString &);
+    static QSet<const QMetaObject*> fixtures;
 
+    QHash<QString, QVariant> *summary;
+    Counts *counts;
+
+    class RunTime {
+    public:
+        long start;
+        long elapsed;
+
+        RunTime();
+        QString toString();
+        QString d(long scale);
+    };
+
+    explicit Fixture(QObject *parent = 0);
+    virtual ~Fixture();
+
+    // Traversal
+    virtual void doTables(Parse *tables);
+    Parse* getFixtureName(Parse *tables);
+    Fixture* loadFixture(const QString &getFixtureName);
+    virtual void doTable(Parse *table);
+    virtual void doRows(Parse *rows);
+    virtual void doRow(Parse *row);
+    virtual void doCells(Parse *cells);
+    virtual void doCell(Parse *cell, int columnNumber);
+
+     // Annotation
     static QString green;
     static QString red;
     static QString gray;
     static QString yellow;
-
-    explicit Fixture(QObject *parent = 0);
-    void doTables(Parse *table);
-    void doRows(Parse *rows);
-    void doRow(Parse *row);
-    void doCells(Parse *cells);
-    void doCell(Parse *cell, int columnNumber);
-
     void right(Parse *cell);
     void wrong(Parse *cell);
     void wrong(Parse *cell, const QString &actual);
-    void ignore (Parse *cell);
+    void ignore(Parse *cell);
+    void error(Parse *cell, const QString &message);
+    void exception(Parse *cell, const std::exception &exception);
 
-    QHash<QString, QVariant> summary;
-    Counts counts;
+    // Utility
+    static QString label(const QString &);
+    static QString escape(const QString &);
+
+protected:
+    QStringList args;
+
+    // Traversal
+    void interpretTables(Parse *tables);
+    Fixture* getLinkedFixtureWithArgs(Parse *tables);
+    void getArgsForTable(Parse *table);
+
+private:
+    // Traversal
+    void interpretFollowingTables(Parse *tables);
 };
 
 } // namespace Fit
+
+Q_DECLARE_METATYPE(Fit::Fixture::RunTime)
 
 #endif // FIT_FIXTURE_H
