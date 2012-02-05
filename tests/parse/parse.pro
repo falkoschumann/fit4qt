@@ -22,5 +22,5 @@ HEADERS += \
 
 INCLUDEPATH += ../../src/
 
-QMAKE_CXXFLAGS += -fprofile-arcs -ftest-coverage
+QMAKE_CXXFLAGS += -g -pg -fprofile-arcs -ftest-coverage
 LIBS += -L/Developer/usr/lib -lprofile_rt

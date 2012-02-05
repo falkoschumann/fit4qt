@@ -26,3 +26,4 @@ function runtest() {
 
 runtest "framework"
 runtest "parse"
+runtest "filerunner"
