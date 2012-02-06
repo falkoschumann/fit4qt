@@ -15,16 +15,16 @@ TEMPLATE = app
 
 SOURCES += \
     frameworktest.cpp \
-    ../../src/fit/fixture.cpp \
-    ../../src/fit/parse.cpp \
-    ../../src/fit/counts.cpp
+    ../../fit/fixture.cpp \
+    ../../fit/parse.cpp \
+    ../../fit/counts.cpp
 
 HEADERS += \
-    ../../src/fit/fixture.h \
-    ../../src/fit/parse.h \
-    ../../src/fit/counts.h
+    ../../fit/fixture.h \
+    ../../fit/parse.h \
+    ../../fit/counts.h
 
-INCLUDEPATH += ../../src/
+INCLUDEPATH += ../..
 
 QMAKE_CXXFLAGS += -g -pg -fprofile-arcs -ftest-coverage
 LIBS += -L/Developer/usr/lib -lprofile_rt

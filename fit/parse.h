@@ -29,7 +29,7 @@
 #ifndef FIT_PARSE_H
 #define FIT_PARSE_H
 
-#include <muspellheim/muspellheimexcept.h>
+#include "fitexcept.h"
 
 #include <QtCore/QStringList>
 

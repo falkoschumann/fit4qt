@@ -15,18 +15,18 @@ TEMPLATE = app
 
 SOURCES += \
     filerunnertest.cpp \
-    ../../src/fit/filerunner.cpp \
-    ../../src/fit/parse.cpp \
-    ../../src/fit/fixture.cpp \
-    ../../src/fit/counts.cpp
+    ../../fit/filerunner.cpp \
+    ../../fit/parse.cpp \
+    ../../fit/fixture.cpp \
+    ../../fit/counts.cpp
 
 HEADERS += \
-    ../../src/fit/filerunner.h \
-    ../../src/fit/parse.h \
-    ../../src/fit/fixture.h \
-    ../../src/fit/counts.h
+    ../../fit/filerunner.h \
+    ../../fit/parse.h \
+    ../../fit/fixture.h \
+    ../../fit/counts.h
 
-INCLUDEPATH += ../../src/
+INCLUDEPATH += ../..
 
 QMAKE_CXXFLAGS += -g -pg -fprofile-arcs -ftest-coverage
 LIBS += -L/Developer/usr/lib -lprofile_rt

@@ -15,12 +15,12 @@ TEMPLATE = app
 
 SOURCES += \
     parsetest.cpp \
-    ../../src/fit/parse.cpp
+    ../../fit/parse.cpp
 
 HEADERS += \
-    ../../src/fit/parse.h
+    ../../fit/parse.h
 
-INCLUDEPATH += ../../src/
+INCLUDEPATH += ../..
 
 QMAKE_CXXFLAGS += -g -pg -fprofile-arcs -ftest-coverage
 LIBS += -L/Developer/usr/lib -lprofile_rt
