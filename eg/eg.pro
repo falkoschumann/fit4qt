@@ -24,6 +24,3 @@ HEADERS += \
 INCLUDEPATH += ..
 
 LIBS += -L${DESTDIR} -lfit
-
-#QMAKE_CXXFLAGS += -g -pg -fprofile-arcs -ftest-coverage
-#LIBS += -L/Developer/usr/lib -lprofile_rt

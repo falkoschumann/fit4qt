@@ -6,5 +6,3 @@ SUBDIRS += \
     filerunner
 
 CONFIG += ordered
-
-OTHER_FILES = runtests.sh
