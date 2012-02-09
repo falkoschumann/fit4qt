@@ -21,7 +21,9 @@ SOURCES += main.cpp \
     filerunner.cpp \
     counts.cpp \
     primitivefixture.cpp \
-    ../eg/arithmeticfixture.cpp
+    ../eg/arithmeticfixture.cpp \
+    ../eg/arithmeticcolumnfixture.cpp \
+    typeadapter.cpp
 
 HEADERS += \
     parse.h \
@@ -33,6 +35,8 @@ HEADERS += \
     counts.h \
     primitivefixture.h \
     ../eg/arithmeticfixture.h \
-    fitexcept.h
+    ../eg/arithmeticcolumnfixture.h \
+    fitexcept.h \
+    typeadapter.h
 
 INCLUDEPATH += ..

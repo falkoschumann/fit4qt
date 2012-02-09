@@ -26,41 +26,90 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef FIT_COLUMNFIXTURE_H
-#define FIT_COLUMNFIXTURE_H
-
-#include "fixture.h"
+#include "typeadapter.h"
 
 namespace Fit {
 
-class TypeAdapter;
-
-class ColumnFixture : public Fixture
+TypeAdapter::TypeAdapter() :
+    target(0),
+    fixture(0)
 {
-    Q_OBJECT
+}
 
-public:
-    explicit ColumnFixture(QObject *parent = 0);
+// Factory //////////////////////////////////
 
-    // Traversal
-    void doRows(Parse *rows);
-    void doRow(Parse *row);
-    void doCell(Parse *cell, int columnNumber);
-    void check(Parse *cell, TypeAdapter *a);
-    void reset();
-    void execute();
+TypeAdapter* TypeAdapter::on(Fixture *target, int type)
+{
+    TypeAdapter *a = adapterFor(type);
+    a->init(target, type);
+    return a;
+}
 
-protected:
-    QList<TypeAdapter*> columnBindings;
-    bool hasExecuted;
+TypeAdapter* TypeAdapter::on(Fixture *fixture, const QMetaProperty &field)
+{
+    TypeAdapter *a = on(fixture, field.type());
+    a->target = fixture;
+    a->field = field;
+    return a;
+}
 
-    // Utility
-    void bind(Parse *heads);
-    TypeAdapter* bindMethod(const QString &name);
-    TypeAdapter* bindField(const QString &name);
-    const QMetaObject* targetClass() const;
-};
+TypeAdapter* TypeAdapter::on(Fixture *fixture, const QMetaMethod &method)
+{
+    TypeAdapter *a = on(fixture, method.methodType());
+    a->target = fixture;
+    a->method = method;
+    return a;
+}
+
+TypeAdapter* TypeAdapter::adapterFor(int type)
+{
+    return new TypeAdapter();
+}
+
+// Accessors ////////////////////////////////
+
+void TypeAdapter::init(Fixture *fixture, int type)
+{
+    this->fixture = fixture;
+    this->type = type;
+}
+
+QVariant TypeAdapter::get()
+{
+    if (field.isValid())
+        return field.read(target);
+    //if (method)
+        return invoke();
+    return QVariant();
+}
+
+void TypeAdapter::set(const QVariant &value)
+{
+    field.write(target, value);
+}
+
+QVariant TypeAdapter::invoke()
+{
+    return method.invoke(target);
+}
+
+QVariant TypeAdapter::parse(const QString &s)
+{
+    return fixture->parse(s, type);
+}
+
+bool TypeAdapter::equals(const QVariant &a, const QVariant &b)
+{
+    if (a.isNull())
+        return b.isNull();
+    return a == b;
+}
+
+QString TypeAdapter::toString(const QVariant &o)
+{
+    if (o.isNull())
+        return "null";
+    return o.toString();
+}
 
 } // namespace Fit
-
-#endif // FIT_COLUMNFIXTURE_H

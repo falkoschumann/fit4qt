@@ -26,41 +26,44 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef FIT_COLUMNFIXTURE_H
-#define FIT_COLUMNFIXTURE_H
+#ifndef EG_ARITHMETICCOLUMNFIXTURE_H
+#define EG_ARITHMETICCOLUMNFIXTURE_H
 
-#include "fixture.h"
+#include <fit/columnfixture.h>
 
 namespace Fit {
+class ScientificDouble;
+}
 
-class TypeAdapter;
+namespace Eg {
 
-class ColumnFixture : public Fixture
+class ArithmeticColumnFixture : public Fit::ColumnFixture
 {
     Q_OBJECT
+    Q_PROPERTY(int x READ x WRITE setX)
+    Q_PROPERTY(int y READ y WRITE setY)
 
 public:
-    explicit ColumnFixture(QObject *parent = 0);
+    Q_INVOKABLE ArithmeticColumnFixture(QObject *parent = 0);
+    int x() const;
+    void setX(int x);
+    int y() const;
+    void setY(int y);
 
-    // Traversal
-    void doRows(Parse *rows);
-    void doRow(Parse *row);
-    void doCell(Parse *cell, int columnNumber);
-    void check(Parse *cell, TypeAdapter *a);
-    void reset();
-    void execute();
+public slots:
+    int plus() const;
+    int minus() const;
+    int times() const;
+    int divide() const;
+    float floating() const;
+//    Fit::ScientificDouble sin() const;
+//    Fit::ScientificDouble cos() const;
 
-protected:
-    QList<TypeAdapter*> columnBindings;
-    bool hasExecuted;
-
-    // Utility
-    void bind(Parse *heads);
-    TypeAdapter* bindMethod(const QString &name);
-    TypeAdapter* bindField(const QString &name);
-    const QMetaObject* targetClass() const;
+private:
+    int m_x;
+    int m_y;
 };
 
-} // namespace Fit
+} // namespace Eg
 
-#endif // FIT_COLUMNFIXTURE_H
+#endif // EG_ARITHMETICCOLUMNFIXTURE_H

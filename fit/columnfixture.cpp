@@ -28,11 +28,115 @@
 
 #include "columnfixture.h"
 
+#include "parse.h"
+#include "typeadapter.h"
+
 namespace Fit {
 
 ColumnFixture::ColumnFixture(QObject *parent) :
-    Fixture(parent)
+    Fixture(parent),
+    hasExecuted(false)
 {
+}
+
+// Traversal ////////////////////////////////
+
+void ColumnFixture::doRows(Parse *rows)
+{
+    bind(rows->parts);
+    Fixture::doRows(rows->more);
+}
+
+void ColumnFixture::doRow(Parse *row)
+{
+    hasExecuted = false;
+    try {
+        reset();
+        Fixture::doRow(row);
+        if (!hasExecuted)
+            execute();
+    } catch (const std::exception &e) {
+        exception(row->leaf(), e);
+    }
+}
+
+void ColumnFixture::doCell(Parse *cell, int column)
+{
+    TypeAdapter *a = columnBindings[column];
+    try {
+        QString text(cell->text());
+        if (text.isEmpty())
+            check(cell, a);
+        else if (!a)
+            ignore(cell);
+        else if (a->field.isValid())
+            a->set(a->parse(text));
+        else //if (a->method)
+            check(cell, a);
+    } catch (const std::exception e) {
+        exception(cell, e);
+    }
+}
+
+void ColumnFixture::check(Parse *cell, TypeAdapter *a)
+{
+    if (!hasExecuted) {
+        try {
+            execute();
+        } catch (const std::exception e) {
+            exception(cell, e);
+        }
+        hasExecuted = true;
+        Fixture::check(cell, a);
+    }
+}
+
+void ColumnFixture::reset()
+{
+    // about to process first cell of row
+}
+
+void ColumnFixture::execute()
+{
+    // about to process first method call of row
+}
+
+// Utility //////////////////////////////////
+
+void ColumnFixture::bind(Parse *heads)
+{
+    columnBindings.clear();
+    for (int i = 0; heads; heads = heads->more) {
+        QString name(heads->text());
+        QString suffix("()");
+        try {
+            if (name.isEmpty())
+                columnBindings.insert(i, 0);
+            else if (name.endsWith(suffix))
+                columnBindings.insert(i, bindMethod(name.mid(0, name.length() - suffix.length())));
+            else
+                columnBindings.insert(i, bindField(name));
+        } catch (const std::exception e) {
+            exception(heads, e);
+        }
+    }
+}
+
+TypeAdapter* ColumnFixture::bindMethod(const QString &name)
+{
+    int index = targetClass()->indexOfSlot(camel(name).toStdString().c_str());
+    return TypeAdapter::on(this, (targetClass()->method(index)));
+}
+
+TypeAdapter* ColumnFixture::bindField(const QString &name)
+{
+    int index = targetClass()->indexOfProperty(camel(name).toStdString().c_str());
+    return TypeAdapter::on(this, (targetClass()->property(index)));
+}
+
+const QMetaObject* ColumnFixture::targetClass() const
+{
+    return metaObject();
 }
 
 } // namespace Fit

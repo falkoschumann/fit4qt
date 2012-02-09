@@ -26,41 +26,70 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef FIT_COLUMNFIXTURE_H
-#define FIT_COLUMNFIXTURE_H
+#include "arithmeticcolumnfixture.h"
 
-#include "fixture.h"
+using namespace Fit;
 
-namespace Fit {
+namespace Eg {
 
-class TypeAdapter;
-
-class ColumnFixture : public Fixture
+ArithmeticColumnFixture::ArithmeticColumnFixture(QObject *parent) :
+    Fit::ColumnFixture(parent)
 {
-    Q_OBJECT
+}
 
-public:
-    explicit ColumnFixture(QObject *parent = 0);
+int ArithmeticColumnFixture::x() const
+{
+    return m_x;
+}
 
-    // Traversal
-    void doRows(Parse *rows);
-    void doRow(Parse *row);
-    void doCell(Parse *cell, int columnNumber);
-    void check(Parse *cell, TypeAdapter *a);
-    void reset();
-    void execute();
+void ArithmeticColumnFixture::setX(int x)
+{
+    m_x = x;
+}
 
-protected:
-    QList<TypeAdapter*> columnBindings;
-    bool hasExecuted;
+int ArithmeticColumnFixture::y() const
+{
+    return m_y;
+}
 
-    // Utility
-    void bind(Parse *heads);
-    TypeAdapter* bindMethod(const QString &name);
-    TypeAdapter* bindField(const QString &name);
-    const QMetaObject* targetClass() const;
-};
+void ArithmeticColumnFixture::setY(int y)
+{
+    m_y = y;
+}
 
-} // namespace Fit
+int ArithmeticColumnFixture::plus() const
+{
+    return m_x + m_y;
+}
 
-#endif // FIT_COLUMNFIXTURE_H
+int ArithmeticColumnFixture::minus() const
+{
+    return m_x - m_y;
+}
+
+int ArithmeticColumnFixture::times() const
+{
+    return m_x * m_y;
+}
+
+int ArithmeticColumnFixture::divide() const
+{
+    return m_x / m_y;
+}
+
+float ArithmeticColumnFixture::floating() const
+{
+    return (float)m_x / (float)m_y;
+}
+
+//ScientificDouble ArithmeticColumnFixture::sin() const
+//{
+//    return ScientificDouble(Math.sin(Math.toRadians(x)));
+//}
+
+//ScientificDouble ArithmeticColumnFixture::cos() const
+//{
+//    return ScientificDouble(Math.cos(Math.toRadians(x)));
+//}
+
+} // namespace Eg

@@ -42,6 +42,7 @@
 namespace Fit {
 
 class Parse;
+class TypeAdapter;
 
 class Fixture : public QObject
 {
@@ -84,6 +85,8 @@ public:
     void right(Parse *cell);
     void wrong(Parse *cell);
     void wrong(Parse *cell, const QString &actual);
+    void info(Parse *cell, const QString &message);
+    QString info(const QString &message);
     void ignore(Parse *cell);
     void error(Parse *cell, const QString &message);
     void exception(Parse *cell, const std::exception &exception);
@@ -91,6 +94,9 @@ public:
     // Utility
     static QString label(const QString &);
     static QString escape(const QString &);
+    static QString camel(const QString &name);
+    QVariant parse(const QString &s, int type);
+    void check(Parse *cell, TypeAdapter *a);
 
 protected:
     QStringList args;

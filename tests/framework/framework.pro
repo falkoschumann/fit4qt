@@ -17,12 +17,14 @@ SOURCES += \
     frameworktest.cpp \
     ../../fit/fixture.cpp \
     ../../fit/parse.cpp \
-    ../../fit/counts.cpp
+    ../../fit/counts.cpp \
+    ../../fit/typeadapter.cpp
 
 HEADERS += \
     ../../fit/fixture.h \
     ../../fit/parse.h \
-    ../../fit/counts.h
+    ../../fit/counts.h \
+    ../../fit/typeadapter.h
 
 INCLUDEPATH += ../..
 

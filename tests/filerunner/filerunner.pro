@@ -18,13 +18,15 @@ SOURCES += \
     ../../fit/filerunner.cpp \
     ../../fit/parse.cpp \
     ../../fit/fixture.cpp \
-    ../../fit/counts.cpp
+    ../../fit/counts.cpp \
+    ../../fit/typeadapter.cpp
 
 HEADERS += \
     ../../fit/filerunner.h \
     ../../fit/parse.h \
     ../../fit/fixture.h \
-    ../../fit/counts.h
+    ../../fit/counts.h \
+    ../../fit/typeadapter.h
 
 INCLUDEPATH += ../..
 

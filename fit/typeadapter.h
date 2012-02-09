@@ -26,41 +26,48 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef FIT_COLUMNFIXTURE_H
-#define FIT_COLUMNFIXTURE_H
+#ifndef FIT_TYPEADAPTER_H
+#define FIT_TYPEADAPTER_H
 
 #include "fixture.h"
 
+#include <QtCore/QMetaMethod>
+#include <QtCore/QMetaObject>
+#include <QtCore/QMetaProperty>
+#include <QtCore/QObject>
+
 namespace Fit {
 
-class TypeAdapter;
-
-class ColumnFixture : public Fixture
+class TypeAdapter
 {
-    Q_OBJECT
-
 public:
-    explicit ColumnFixture(QObject *parent = 0);
+    QObject *target;
+    Fixture *fixture;
+    QMetaProperty field;
+    QMetaMethod method;
+    int type;
 
-    // Traversal
-    void doRows(Parse *rows);
-    void doRow(Parse *row);
-    void doCell(Parse *cell, int columnNumber);
-    void check(Parse *cell, TypeAdapter *a);
-    void reset();
-    void execute();
+    TypeAdapter();
+
+    // Factory
+    static TypeAdapter* on(Fixture *fixture, int type);
+    static TypeAdapter* on(Fixture *fixture, const QMetaProperty &field);
+    static TypeAdapter* on(Fixture *fixture, const QMetaMethod &method);
+    static TypeAdapter* adapterFor(int type);
+
+    // Accessors
+    QVariant get();
+    void set(const QVariant &value);
+    QVariant invoke();
+    QVariant parse(const QString &s);
+    bool equals(const QVariant &a, const QVariant &b);
+    QString toString(const QVariant &o);
 
 protected:
-    QList<TypeAdapter*> columnBindings;
-    bool hasExecuted;
-
-    // Utility
-    void bind(Parse *heads);
-    TypeAdapter* bindMethod(const QString &name);
-    TypeAdapter* bindField(const QString &name);
-    const QMetaObject* targetClass() const;
+    // Accessors
+    void init(Fixture *fixture, int type);
 };
 
 } // namespace Fit
 
-#endif // FIT_COLUMNFIXTURE_H
+#endif // FIT_TYPEADAPTER_H

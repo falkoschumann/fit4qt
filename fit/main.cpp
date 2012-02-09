@@ -30,6 +30,7 @@
 #include "fixture.h"
 
 #include <eg/arithmeticfixture.h>
+#include <eg/arithmeticcolumnfixture.h>
 
 #include <iostream>
 
@@ -38,6 +39,7 @@ using namespace Fit;
 int main(int argc, char *argv[])
 {
     Fixture::fixtures << &Eg::ArithmeticFixture::staticMetaObject;
+    Fixture::fixtures << &Eg::ArithmeticColumnFixture::staticMetaObject;
 
     FileRunner fileRunner;
     try {

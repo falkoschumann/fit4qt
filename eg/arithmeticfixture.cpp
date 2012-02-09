@@ -30,19 +30,21 @@
 
 #include <fit/parse.h>
 
+using namespace Fit;
+
 namespace Eg {
 
 ArithmeticFixture::ArithmeticFixture(QObject *parent) :
-    Fit::PrimitiveFixture(parent)
+    PrimitiveFixture(parent)
 {
 }
 
-void ArithmeticFixture::doRows(Fit::Parse *rows)
+void ArithmeticFixture::doRows(Parse *rows)
 {
     Fixture::doRows(rows->more); // skip column heads
 }
 
-void ArithmeticFixture::doCell(Fit::Parse *cell, int column)
+void ArithmeticFixture::doCell(Parse *cell, int column)
 {
     switch (column) {
     case 0:

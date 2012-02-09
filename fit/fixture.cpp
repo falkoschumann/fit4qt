@@ -29,6 +29,7 @@
 #include "fixture.h"
 
 #include "parse.h"
+#include "typeadapter.h"
 
 #include <QtCore/QDateTime>
 #include <QtCore/QDebug>
@@ -227,6 +228,16 @@ void Fixture::wrong(Parse *cell, const QString &actual)
     cell->addToBody(label("expected") + "<hr>" + escape(actual) + label("actual"));
 }
 
+void Fixture::info(Parse *cell, const QString &message)
+{
+    cell->addToBody(info(message));
+}
+
+QString Fixture::info(const QString &message)
+{
+    return " <font color=\"#808080\">" + escape(message) + "</font>";
+}
+
 void Fixture::ignore(Parse *cell)
 {
     cell->addToTag(" bgcolor=\"" + gray + "\"");
@@ -263,6 +274,55 @@ QString Fixture::escape(const QString &string) {
     replaced.replace("\r", "<br />");
     replaced.replace("\n", "<br />");
     return replaced;
+}
+
+QString Fixture::camel(const QString &name)
+{
+    QStringList tokens(name.split(QRegExp("\\b")));
+    if (tokens.size() <= 1)
+        return name;
+    QString result;
+    foreach (QString token, tokens) {
+        result += token.mid(0, 1).toUpper();
+        result += token.mid(1);
+    }
+    return result;
+}
+
+QVariant Fixture::parse(const QString &s, int type)
+{
+    return QVariant(type, &s);
+}
+
+void Fixture::check(Parse *cell, TypeAdapter *a)
+{
+    QString text(cell->text());
+    if (text.isEmpty()) {
+        try {
+            info(cell, a->toString(a->get()));
+        } catch (const std::exception &e) {
+            info(cell, "error");
+        }
+    } else if (!a) {
+        ignore(cell);
+    } else if (text == "error") {
+        try {
+            QVariant result(a->invoke());
+            wrong(cell, a->toString(result));
+        } catch (const std::exception &e) {
+            right(cell);
+        }
+    } else {
+        try {
+            QVariant result(a->get());
+            if (a->equals(a->parse(text), result))
+                right(cell);
+            else
+                wrong(cell, a->toString(result));
+        } catch (const std::exception &e){
+            exception(cell, e);
+        }
+    }
 }
 
 } // namespace Fit
