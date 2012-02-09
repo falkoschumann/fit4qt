@@ -39,3 +39,6 @@ HEADERS += \
     typeadapter.h
 
 INCLUDEPATH += ..
+
+QMAKE_CXXFLAGS += -g -pg -fprofile-arcs -ftest-coverage
+LIBS += -L/Developer/usr/lib -lprofile_rt
