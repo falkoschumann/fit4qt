@@ -26,11 +26,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "filerunner.h"
-#include "fixture.h"
+#include "arithmeticfixture.h"
+#include "arithmeticcolumnfixture.h"
 
-#include <eg/arithmeticfixture.h>
-#include <eg/arithmeticcolumnfixture.h>
+#include <fit/filerunner.h>
+#include <fit/fixture.h>
 
 #include <iostream>
 

@@ -4,31 +4,24 @@
 #
 #-------------------------------------------------
 
+TEMPLATE = app
+TARGET = filerunnertest
+DESTDIR = ../../dist
+
 QT += testlib
 QT -= gui
 
-TARGET = filerunnertest
 CONFIG += console
 CONFIG -= app_bundle
 
-TEMPLATE = app
-
 SOURCES += \
-    filerunnertest.cpp \
-    ../../fit/filerunner.cpp \
-    ../../fit/parse.cpp \
-    ../../fit/fixture.cpp \
-    ../../fit/counts.cpp \
-    ../../fit/typeadapter.cpp
+    filerunnertest.cpp
 
-HEADERS += \
-    ../../fit/filerunner.h \
-    ../../fit/parse.h \
-    ../../fit/fixture.h \
-    ../../fit/counts.h \
-    ../../fit/typeadapter.h
+HEADERS +=
 
 INCLUDEPATH += ../..
 
 QMAKE_CXXFLAGS += -g -pg -fprofile-arcs -ftest-coverage
 LIBS += -L/Developer/usr/lib -lprofile_rt
+
+LIBS += -L../../dist -lfit

@@ -4,29 +4,24 @@
 #
 #-------------------------------------------------
 
+TEMPLATE = app
+TARGET = frameworktest
+DESTDIR = ../../dist
+
 QT += testlib
 QT -= gui
 
-TARGET = frameworktest
 CONFIG += console
 CONFIG -= app_bundle
 
-TEMPLATE = app
-
 SOURCES += \
-    frameworktest.cpp \
-    ../../fit/fixture.cpp \
-    ../../fit/parse.cpp \
-    ../../fit/counts.cpp \
-    ../../fit/typeadapter.cpp
+    frameworktest.cpp
 
-HEADERS += \
-    ../../fit/fixture.h \
-    ../../fit/parse.h \
-    ../../fit/counts.h \
-    ../../fit/typeadapter.h
+HEADERS +=
 
 INCLUDEPATH += ../..
 
 QMAKE_CXXFLAGS += -g -pg -fprofile-arcs -ftest-coverage
 LIBS += -L/Developer/usr/lib -lprofile_rt
+
+LIBS += -L../../dist -lfit

@@ -2,4 +2,7 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     fit \
-    tests
+    tests \
+    eg
+
+CONFIG += ordered

@@ -4,15 +4,18 @@
 #
 #-------------------------------------------------
 
+TEMPLATE = lib
+VERSION = 0.3.0
+DESTDIR = ../dist
+
 QT += core
 QT -= gui
 
-CONFIG += console warn_on
-CONFIG -= app_bundle
+CONFIG += dll warn_on
+CONFIG -= lib_bundle
 
-TEMPLATE = app
 
-SOURCES += main.cpp \
+SOURCES += \
     parse.cpp \
     fixture.cpp \
     columnfixture.cpp \
@@ -21,8 +24,6 @@ SOURCES += main.cpp \
     filerunner.cpp \
     counts.cpp \
     primitivefixture.cpp \
-    ../eg/arithmeticfixture.cpp \
-    ../eg/arithmeticcolumnfixture.cpp \
     typeadapter.cpp
 
 HEADERS += \
@@ -34,8 +35,6 @@ HEADERS += \
     filerunner.h \
     counts.h \
     primitivefixture.h \
-    ../eg/arithmeticfixture.h \
-    ../eg/arithmeticcolumnfixture.h \
     fitexcept.h \
     typeadapter.h
 
