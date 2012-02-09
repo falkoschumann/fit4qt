@@ -6,11 +6,12 @@
 
 TEMPLATE = lib
 VERSION = 0.3.0
+DESTDIR = ../dist
 
 QT += core
 QT -= gui
 
-CONFIG += static warn_on
+CONFIG += dll warn_on
 CONFIG -= lib_bundle
 
 
@@ -39,5 +40,5 @@ HEADERS += \
 
 INCLUDEPATH += ..
 
-QMAKE_CXXFLAGS += -g -pg -fprofile-arcs -ftest-coverage
-LIBS += -L/Developer/usr/lib -lprofile_rt
+#QMAKE_CXXFLAGS += -g -pg -fprofile-arcs -ftest-coverage
+#LIBS += -L/Developer/usr/lib -lprofile_rt

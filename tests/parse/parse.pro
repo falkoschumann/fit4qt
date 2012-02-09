@@ -5,7 +5,8 @@
 #-------------------------------------------------
 
 TEMPLATE = app
-TARGET = parsetest
+TARGET = testparse
+DESTDIR = ../../dist
 
 QT += testlib
 QT -= gui
@@ -20,7 +21,7 @@ HEADERS +=
 
 INCLUDEPATH += ../..
 
-QMAKE_CXXFLAGS += -g -pg -fprofile-arcs -ftest-coverage
-LIBS += -L/Developer/usr/lib -lprofile_rt
+#QMAKE_CXXFLAGS += -g -pg -fprofile-arcs -ftest-coverage
+#LIBS += -L/Developer/usr/lib -lprofile_rt
 
-LIBS += -L../../fit -lfit
+LIBS += -L${DESTDIR} -lfit
