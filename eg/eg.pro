@@ -5,7 +5,6 @@
 #-------------------------------------------------
 
 TEMPLATE = app
-DESTDIR = ../dist
 
 QT += core
 QT -= gui
@@ -23,7 +22,7 @@ HEADERS += \
 
 INCLUDEPATH += ..
 
-LIBS += -L../dist -lfit
+LIBS += -L../fit -lfit
 
 QMAKE_CXXFLAGS += -g -pg -fprofile-arcs -ftest-coverage
 LIBS += -L/Developer/usr/lib -lprofile_rt

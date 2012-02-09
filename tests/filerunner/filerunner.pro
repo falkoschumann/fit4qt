@@ -6,7 +6,6 @@
 
 TEMPLATE = app
 TARGET = filerunnertest
-DESTDIR = ../../dist
 
 QT += testlib
 QT -= gui
@@ -24,4 +23,4 @@ INCLUDEPATH += ../..
 QMAKE_CXXFLAGS += -g -pg -fprofile-arcs -ftest-coverage
 LIBS += -L/Developer/usr/lib -lprofile_rt
 
-LIBS += -L../../dist -lfit
+LIBS += -L../../fit -lfit
