@@ -4,14 +4,10 @@
 #
 #-------------------------------------------------
 
+include(../fit4qt.pri)
+include(../fit4qt-app.pri)
+
 TEMPLATE = app
-DESTDIR = ../dist
-
-QT += core
-QT -= gui
-
-CONFIG += console warn_on
-CONFIG -= app_bundle
 
 SOURCES += main.cpp \
     arithmeticfixture.cpp \
@@ -20,7 +16,3 @@ SOURCES += main.cpp \
 HEADERS += \
     arithmeticfixture.h \
     arithmeticcolumnfixture.h
-
-INCLUDEPATH += ..
-
-LIBS += -L${DESTDIR} -lfit

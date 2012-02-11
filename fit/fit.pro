@@ -4,16 +4,13 @@
 #
 #-------------------------------------------------
 
+include(../fit4qt.pri)
+include(../fit4qt-lib.pri)
+
 TEMPLATE = lib
 VERSION = 0.3.0
-DESTDIR = ../dist
 
-QT += core
-QT -= gui
-
-CONFIG += dll warn_on
-CONFIG -= lib_bundle
-
+CONFIG += dll
 
 SOURCES += \
     parse.cpp \
@@ -37,5 +34,3 @@ HEADERS += \
     primitivefixture.h \
     fitexcept.h \
     typeadapter.h
-
-INCLUDEPATH += ..

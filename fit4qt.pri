@@ -4,12 +4,10 @@
 #
 #-------------------------------------------------
 
-include(../../fit4qt.pri)
-include(../../fit4qt-app.pri)
+DESTDIR = $$PWD/dist
 
-TEMPLATE = app
-TARGET = testparse
+QT -= gui
 
-QT += testlib
+CONFIG += warn_on
 
-SOURCES += parsetest.cpp
+INCLUDEPATH += $$PWD

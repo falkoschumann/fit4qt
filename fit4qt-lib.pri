@@ -4,12 +4,6 @@
 #
 #-------------------------------------------------
 
-include(../../fit4qt.pri)
-include(../../fit4qt-app.pri)
-
-TEMPLATE = app
-TARGET = testparse
-
-QT += testlib
-
-SOURCES += parsetest.cpp
+macx {
+    CONFIG -= lib_bundle
+}

@@ -4,21 +4,12 @@
 #
 #-------------------------------------------------
 
+include(../../fit4qt.pri)
+include(../../fit4qt-app.pri)
+
 TEMPLATE = app
 TARGET = testfilerunner
-DESTDIR = ../../dist
 
 QT += testlib
-QT -= gui
 
-CONFIG += console
-CONFIG -= app_bundle
-
-SOURCES += \
-    filerunnertest.cpp
-
-HEADERS +=
-
-INCLUDEPATH += ../..
-
-LIBS += -L${DESTDIR} -lfit
+SOURCES += filerunnertest.cpp
