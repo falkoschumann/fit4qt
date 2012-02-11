@@ -12,3 +12,5 @@ SUBDIRS += \
     eg
 
 CONFIG += ordered
+
+OTHER_FILES += runtests.sh
