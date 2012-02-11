@@ -30,8 +30,6 @@
 
 #include <QtCore/QTextStream>
 
-using namespace muspellheim;
-
 namespace Fit {
 
 Parse::Parse(const QString &tag, const QString &body, Parse *parts, Parse *more) :
@@ -126,6 +124,16 @@ int Parse::findMatchingEndTag(const QString &lc, int matchFromHere, const QStrin
     return startEnd;
 }
 
+int Parse::size()
+{
+    return more ? more->size() + 1 : 1 ;
+}
+
+Parse* Parse::last()
+{
+    return more ? more->last() : this;
+}
+
 Parse* Parse::leaf()
 {
     return parts ? parts->leaf() : this;
@@ -181,10 +189,10 @@ QString Parse::unescape(QString s) {
 }
 
 QString Parse::unescapeSmartQuotes(QString s) {
-    s = s.replace('\u201c', '"');
-    s = s.replace('\u201d', '"');
-    s = s.replace('\u2018', '\'');
-    s = s.replace('\u2019', '\'');
+    s = s.replace(QChar(0x201c), '"');
+    s = s.replace(QChar(0x201d), '"');
+    s = s.replace(QChar(0x2018), '\'');
+    s = s.replace(QChar(0x2019), '\'');
     return s;
 }
 
@@ -198,18 +206,19 @@ QString Parse::unescapeEntities(QString s) {
 }
 
 QString Parse::normalizeLineBreaks(QString s) {
-    s = s.replace("<\\s*br\\s*/?\\s*>", "<br />");
-    s = s.replace("<\\s*/\\s*p\\s*>\\s*<\\s*p( .*?)?>", "<br />");
+    s = s.replace(QRegExp("<\\s*br\\s*/?\\s*>"), "<br />");
+    s = s.replace(QRegExp("<\\s*/\\s*p\\s*>\\s*<\\s*p( .*?)?>"), "<br />");
     return s;
 }
 
 QString Parse::condenseWhitespace(QString s) {
-    const char NON_BREAKING_SPACE = (char)160;
+    const QChar NON_BREAKING_SPACE = QChar(0x00a0);
 
-    s = s.replace("\\s+", " ");
+    //s = s.replace(QRegExp("[ \\t\\n\\v\\f\\r]+"), " ");
+    s = s.replace(QRegExp("\\s+"), " ");
     s = s.replace(NON_BREAKING_SPACE, ' ');
     s = s.replace("&nbsp;", " ");
-    s = s.simplified();
+    s = s.trimmed();
     return s;
 }
 

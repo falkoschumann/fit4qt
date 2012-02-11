@@ -56,8 +56,10 @@ public:
     Parse(const QString &text,
           const QStringList &tags = Parse::tags,
           int level = 0,
-          int offset = 0) throw (muspellheim::parse_exception);
+          int offset = 0) throw (parse_exception);
     ~Parse();
+    int size();
+    Parse* last();
     Parse* leaf();
     Parse* at(int i);
     Parse* at(int i, int j);

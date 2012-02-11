@@ -33,7 +33,7 @@
 #include <string>
 #include <stdexcept>
 
-namespace muspellheim {
+namespace Fit {
 
 class parse_exception : public std::exception
 {
@@ -49,6 +49,6 @@ private:
     const int m_errorOffset;
 };
 
-} // namespace muspellheim
+} // namespace Fit
 
 #endif // MUSPELLHEIM_PARSE_EXCEPTION_H
