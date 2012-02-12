@@ -28,6 +28,8 @@
 
 #include "arithmeticcolumnfixture.h"
 
+#include <stdexcept>
+
 using namespace Fit;
 
 namespace Eg {
@@ -57,37 +59,41 @@ void ArithmeticColumnFixture::setY(int y)
     m_y = y;
 }
 
-int ArithmeticColumnFixture::plus() const
+int ArithmeticColumnFixture::plus()
 {
     return m_x + m_y;
 }
 
-int ArithmeticColumnFixture::minus() const
+int ArithmeticColumnFixture::minus()
 {
     return m_x - m_y;
 }
 
-int ArithmeticColumnFixture::times() const
+int ArithmeticColumnFixture::times()
 {
     return m_x * m_y;
 }
 
-int ArithmeticColumnFixture::divide() const
+int ArithmeticColumnFixture::divide()
 {
+    if (m_y == 0)
+        throw std::logic_error("arithmetic exception: division by zero");
     return m_x / m_y;
 }
 
-float ArithmeticColumnFixture::floating() const
+float ArithmeticColumnFixture::floating()
 {
-    return (float)m_x / (float)m_y;
+    if (m_y == 0)
+        throw std::logic_error("arithmetic exception: division by zero");
+    return (float) m_x / (float) m_y;
 }
 
-//ScientificDouble ArithmeticColumnFixture::sin() const
+//ScientificDouble ArithmeticColumnFixture::sin()
 //{
 //    return ScientificDouble(Math.sin(Math.toRadians(x)));
 //}
 
-//ScientificDouble ArithmeticColumnFixture::cos() const
+//ScientificDouble ArithmeticColumnFixture::cos()
 //{
 //    return ScientificDouble(Math.cos(Math.toRadians(x)));
 //}

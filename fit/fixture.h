@@ -96,7 +96,7 @@ public:
     static QString escape(const QString &);
     static QString camel(const QString &name);
     QVariant parse(const QString &s, int type);
-    void check(Parse *cell, TypeAdapter *a);
+    virtual void check(Parse *cell, TypeAdapter *a);
 
 protected:
     QStringList args;

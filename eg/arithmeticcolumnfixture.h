@@ -51,13 +51,13 @@ public:
     void setY(int y);
 
 public slots:
-    int plus() const;
-    int minus() const;
-    int times() const;
-    int divide() const;
-    float floating() const;
-//    Fit::ScientificDouble sin() const;
-//    Fit::ScientificDouble cos() const;
+    int plus();
+    int minus();
+    int times();
+    int divide();
+    float floating();
+//    Fit::ScientificDouble sin();
+//    Fit::ScientificDouble cos();
 
 private:
     int m_x;

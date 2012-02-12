@@ -31,6 +31,8 @@
 #include "parse.h"
 #include "typeadapter.h"
 
+#include <QtCore/QDebug>
+
 namespace Fit {
 
 ColumnFixture::ColumnFixture(QObject *parent) :
@@ -65,14 +67,21 @@ void ColumnFixture::doCell(Parse *cell, int column)
     TypeAdapter *a = columnBindings[column];
     try {
         QString text(cell->text());
-        if (text.isEmpty())
+        if (text.isEmpty()) {
+            qDebug() << "doCell" << column << text << "(empty)";
             check(cell, a);
-        else if (!a)
+        } else if (!a) {
+            qDebug() << "doCell" << column << text << "(ignore)";
             ignore(cell);
-        else if (a->field.isValid())
+        } else if (a->isField()) {
+            qDebug() << "doCell" << column << text << "(field)";
             a->set(a->parse(text));
-        else //if (a->method)
+        } else if (a->isMethod()) {
+            qDebug() << "doCell" << column << text << "(method)";
             check(cell, a);
+        } else {
+            qDebug() << "doCell" << column << text << "(else)";
+        }
     } catch (const std::exception e) {
         exception(cell, e);
     }
@@ -80,6 +89,7 @@ void ColumnFixture::doCell(Parse *cell, int column)
 
 void ColumnFixture::check(Parse *cell, TypeAdapter *a)
 {
+    qDebug() << "ColumnFixture::check";
     if (!hasExecuted) {
         try {
             execute();
@@ -87,8 +97,8 @@ void ColumnFixture::check(Parse *cell, TypeAdapter *a)
             exception(cell, e);
         }
         hasExecuted = true;
-        Fixture::check(cell, a);
     }
+    Fixture::check(cell, a);
 }
 
 void ColumnFixture::reset()
@@ -106,7 +116,7 @@ void ColumnFixture::execute()
 void ColumnFixture::bind(Parse *heads)
 {
     columnBindings.clear();
-    for (int i = 0; heads; heads = heads->more) {
+    for (int i = 0; heads; ++i, heads = heads->more) {
         QString name(heads->text());
         QString suffix("()");
         try {
@@ -124,14 +134,12 @@ void ColumnFixture::bind(Parse *heads)
 
 TypeAdapter* ColumnFixture::bindMethod(const QString &name)
 {
-    int index = targetClass()->indexOfSlot(camel(name).toStdString().c_str());
-    return TypeAdapter::on(this, (targetClass()->method(index)));
+    return TypeAdapter::createMethodAdapter(this, name);
 }
 
 TypeAdapter* ColumnFixture::bindField(const QString &name)
 {
-    int index = targetClass()->indexOfProperty(camel(name).toStdString().c_str());
-    return TypeAdapter::on(this, (targetClass()->property(index)));
+    return TypeAdapter::createFieldAdapter(this, name);
 }
 
 const QMetaObject* ColumnFixture::targetClass() const

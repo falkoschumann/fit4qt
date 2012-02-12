@@ -186,7 +186,7 @@ void Fixture::doRow(Parse *row)
 
 void Fixture::doCells(Parse *cells)
 {
-    for (int i = 0; cells; ++i) {
+    for (int i = 0; cells != 0; ++i) {
         try {
             doCell(cells, i);
         } catch (const std::exception &e) {
@@ -291,12 +291,14 @@ QString Fixture::camel(const QString &name)
 
 QVariant Fixture::parse(const QString &s, int type)
 {
-    return QVariant(type, &s);
+    //return QVariant(type, &s);
+    return QVariant::fromValue(s);
 }
 
 void Fixture::check(Parse *cell, TypeAdapter *a)
 {
     QString text(cell->text());
+    qDebug() << "Fixture::check" << text;
     if (text.isEmpty()) {
         try {
             info(cell, a->toString(a->get()));

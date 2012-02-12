@@ -28,73 +28,105 @@
 
 #include "typeadapter.h"
 
+#include <QtCore/QDebug>
+
 namespace Fit {
 
-TypeAdapter::TypeAdapter() :
-    target(0),
-    fixture(0)
+TypeAdapter::TypeAdapter(const QMetaObject *metaObject, const QString name, bool isField) :
+    m_metaObject(metaObject),
+    m_name(name),
+    m_field(isField)
 {
 }
+
+bool TypeAdapter::isField() const
+{
+    return m_field;
+}
+bool TypeAdapter::isMethod() const
+{
+    return !isField();
+}
+
 
 // Factory //////////////////////////////////
 
-TypeAdapter* TypeAdapter::on(Fixture *target, int type)
+TypeAdapter* TypeAdapter::createFieldAdapter(Fixture *fixture, const QString &fieldName)
 {
-    TypeAdapter *a = adapterFor(type);
-    a->init(target, type);
-    return a;
-}
-
-TypeAdapter* TypeAdapter::on(Fixture *fixture, const QMetaProperty &field)
-{
-    TypeAdapter *a = on(fixture, field.type());
+    TypeAdapter * a = new TypeAdapter(fixture->metaObject(), fieldName, true);
+    a->fixture = fixture;
     a->target = fixture;
-    a->field = field;
     return a;
 }
 
-TypeAdapter* TypeAdapter::on(Fixture *fixture, const QMetaMethod &method)
+TypeAdapter* TypeAdapter::createMethodAdapter(Fixture *fixture, const QString &methodName)
 {
-    TypeAdapter *a = on(fixture, method.methodType());
+    TypeAdapter * a = new TypeAdapter(fixture->metaObject(), methodName, false);
+    a->fixture = fixture;
     a->target = fixture;
-    a->method = method;
     return a;
-}
-
-TypeAdapter* TypeAdapter::adapterFor(int type)
-{
-    return new TypeAdapter();
 }
 
 // Accessors ////////////////////////////////
 
-void TypeAdapter::init(Fixture *fixture, int type)
-{
-    this->fixture = fixture;
-    this->type = type;
-}
-
 QVariant TypeAdapter::get()
 {
-    if (field.isValid())
+    if (isField()) {
+        int index = m_metaObject->indexOfProperty(m_name.toStdString().c_str());
+        QMetaProperty field = m_metaObject->property(index);
+        //qDebug() << "get" << field.name();
         return field.read(target);
-    //if (method)
+    } else if (isMethod()) {
+        QMetaMethod method;
+        for (int i = 0; i < m_metaObject->methodCount(); ++i) {
+            method = m_metaObject->method(i);
+            if (QString(method.signature()).startsWith(m_name))
+                break;
+        }
+        //qDebug() << "get" << method.signature();
         return invoke();
+    }
     return QVariant();
 }
 
 void TypeAdapter::set(const QVariant &value)
 {
-    field.write(target, value);
+    int index = m_metaObject->indexOfProperty(m_name.toStdString().c_str());
+    QMetaProperty field = m_metaObject->property(index);
+    bool ok = field.write(target, value);
+    //qDebug() << "set" << field.name() << "to" << value << ok;
 }
 
 QVariant TypeAdapter::invoke()
 {
-    return method.invoke(target);
+    QMetaMethod method;
+    for (int i = 0; i < m_metaObject->methodCount(); ++i) {
+        method = m_metaObject->method(i);
+        if (QString(method.signature()).startsWith(m_name))
+            break;
+    }
+    QVariant result;
+    bool ok;
+    QString returnType(method.typeName());
+    if (returnType == QString("int")) {
+        int value;
+        ok = method.invoke(target, Q_RETURN_ARG(int, value));
+        result.setValue(value);
+    } if (returnType == QString("float")) {
+        float value;
+        ok = method.invoke(target, Q_RETURN_ARG(float, value));
+        result.setValue(value);
+    }
+    //qDebug() << "invoke" << method.signature() << ok << value;
+    // return QVariant(QVariant::Int, &value);
+    return result;
 }
 
 QVariant TypeAdapter::parse(const QString &s)
 {
+    int index = m_metaObject->indexOfProperty(m_name.toStdString().c_str());
+    QMetaProperty field = m_metaObject->property(index);
+    int type = field.type();
     return fixture->parse(s, type);
 }
 

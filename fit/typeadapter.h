@@ -43,17 +43,13 @@ class TypeAdapter
 public:
     QObject *target;
     Fixture *fixture;
-    QMetaProperty field;
-    QMetaMethod method;
-    int type;
 
-    TypeAdapter();
+    bool isField() const;
+    bool isMethod() const;
 
     // Factory
-    static TypeAdapter* on(Fixture *fixture, int type);
-    static TypeAdapter* on(Fixture *fixture, const QMetaProperty &field);
-    static TypeAdapter* on(Fixture *fixture, const QMetaMethod &method);
-    static TypeAdapter* adapterFor(int type);
+    static TypeAdapter* createFieldAdapter(Fixture *fixture, const QString &fieldName);
+    static TypeAdapter* createMethodAdapter(Fixture *fixture, const QString &methodName);
 
     // Accessors
     QVariant get();
@@ -63,9 +59,12 @@ public:
     bool equals(const QVariant &a, const QVariant &b);
     QString toString(const QVariant &o);
 
-protected:
-    // Accessors
-    void init(Fixture *fixture, int type);
+private:
+    explicit TypeAdapter(const QMetaObject *metaObject, const QString name, bool isField);
+
+    const QMetaObject * const m_metaObject;
+    const QString m_name;
+    const bool m_field;
 };
 
 } // namespace Fit
