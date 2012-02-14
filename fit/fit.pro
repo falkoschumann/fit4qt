@@ -21,7 +21,8 @@ SOURCES += \
     filerunner.cpp \
     counts.cpp \
     primitivefixture.cpp \
-    typeadapter.cpp
+    typeadapter.cpp \
+    summary.cpp
 
 HEADERS += \
     parse.h \
@@ -33,4 +34,5 @@ HEADERS += \
     counts.h \
     primitivefixture.h \
     fitexcept.h \
-    typeadapter.h
+    typeadapter.h \
+    summary.h

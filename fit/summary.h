@@ -26,27 +26,30 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "arithmeticfixture.h"
-#include "arithmeticcolumnfixture.h"
+#ifndef FIT_SUMMARY_H
+#define FIT_SUMMARY_H
 
-#include <fit/filerunner.h>
-#include <fit/summary.h>
+#include "fixture.h"
 
-#include <iostream>
+namespace Fit {
 
-using namespace Fit;
-
-int main(int argc, char *argv[])
+class Summary : public Fit::Fixture
 {
-    Fixture::fixtures << &Fit::Summary::staticMetaObject;
-    Fixture::fixtures << &Eg::ArithmeticFixture::staticMetaObject;
-    Fixture::fixtures << &Eg::ArithmeticColumnFixture::staticMetaObject;
+    Q_OBJECT
 
-    FileRunner fileRunner;
-    try {
-        return fileRunner.run(argc, argv);
-    } catch (const std::exception &e) {
-        std::cerr << e.what() << std::endl;
-        return -1;
-    }
-}
+public:
+    static const QString countsKey;
+
+    Q_INVOKABLE Summary(QObject *parent = 0);
+    void doTable(Parse *table);
+
+protected:
+    Parse* rows(QListIterator<QString> &keys);
+    Parse* tr(Parse *parts, Parse *more);
+    Parse* td(const QString &body, Parse *more);
+    void mark(Parse *row);
+};
+
+} // namespace Fit
+
+#endif // FIT_SUMMARY_H

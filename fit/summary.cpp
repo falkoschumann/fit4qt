@@ -26,27 +26,64 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "arithmeticfixture.h"
-#include "arithmeticcolumnfixture.h"
+#include "summary.h"
 
-#include <fit/filerunner.h>
-#include <fit/summary.h>
+#include "parse.h"
 
-#include <iostream>
+#include <QtCore/QDebug>
 
-using namespace Fit;
+namespace Fit {
 
-int main(int argc, char *argv[])
+const QString Summary::countsKey("counts");
+
+Summary::Summary(QObject *parent) :
+    Fit::Fixture(parent)
 {
-    Fixture::fixtures << &Fit::Summary::staticMetaObject;
-    Fixture::fixtures << &Eg::ArithmeticFixture::staticMetaObject;
-    Fixture::fixtures << &Eg::ArithmeticColumnFixture::staticMetaObject;
+}
 
-    FileRunner fileRunner;
-    try {
-        return fileRunner.run(argc, argv);
-    } catch (const std::exception &e) {
-        std::cerr << e.what() << std::endl;
-        return -1;
+void Summary::doTable(Parse *table)
+{
+    summary->insert(countsKey, counts->toString());
+    QListIterator<QString> keys(summary->keys());
+    table->parts->more = rows(keys);
+}
+
+Parse* Summary::rows(QListIterator<QString> &keys)
+{
+    if (keys.hasNext()) {
+        QString key(keys.next());
+        qDebug() << "key =" << key;
+        Parse *result = tr(td(key, td(summary->value(key).toString(), 0)), rows(keys));
+        if (key == countsKey)
+            mark(result);
+        return result;
+    } else {
+        return 0;
     }
 }
+
+Parse* Summary::tr(Parse *parts, Parse *more)
+{
+    return new Parse("tr", 0, parts, more);
+}
+
+Parse* Summary::td(const QString &body, Parse *more)
+{
+    return new Parse("td", info(body), 0, more);
+}
+
+void Summary::mark(Parse *row)
+{
+    // mark summary good/bad without counting beyond here
+    Counts *official = new Counts(*counts);
+    counts = new Counts();
+    Parse *cell = row->parts->more;
+    if (official->wrong + official->exceptions > 0) {
+        wrong(cell);
+    } else {
+        right(cell);
+    }
+    counts = official;
+}
+
+} // namespace Fit
