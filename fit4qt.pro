@@ -13,4 +13,6 @@ SUBDIRS += \
 
 CONFIG += ordered
 
-OTHER_FILES += runtests.sh
+OTHER_FILES += \
+    runtests.sh \
+    runexamples.sh
