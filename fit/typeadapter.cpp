@@ -28,7 +28,7 @@
 
 #include "typeadapter.h"
 
-#include <QtCore/QDebug>
+//#include <QtCore/QDebug>
 
 namespace Fit {
 

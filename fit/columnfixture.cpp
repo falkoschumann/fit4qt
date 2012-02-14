@@ -31,7 +31,7 @@
 #include "parse.h"
 #include "typeadapter.h"
 
-#include <QtCore/QDebug>
+//#include <QtCore/QDebug>
 
 namespace Fit {
 
@@ -68,19 +68,19 @@ void ColumnFixture::doCell(Parse *cell, int column)
     try {
         QString text(cell->text());
         if (text.isEmpty()) {
-            qDebug() << "doCell" << column << text << "(empty)";
+            //qDebug() << "doCell" << column << text << "(empty)";
             check(cell, a);
         } else if (!a) {
-            qDebug() << "doCell" << column << text << "(ignore)";
+            //qDebug() << "doCell" << column << text << "(ignore)";
             ignore(cell);
         } else if (a->isField()) {
-            qDebug() << "doCell" << column << text << "(field)";
+            //qDebug() << "doCell" << column << text << "(field)";
             a->set(a->parse(text));
         } else if (a->isMethod()) {
-            qDebug() << "doCell" << column << text << "(method)";
+            //qDebug() << "doCell" << column << text << "(method)";
             check(cell, a);
         } else {
-            qDebug() << "doCell" << column << text << "(else)";
+            //qDebug() << "doCell" << column << text << "(else)";
         }
     } catch (const std::exception e) {
         exception(cell, e);
@@ -89,7 +89,7 @@ void ColumnFixture::doCell(Parse *cell, int column)
 
 void ColumnFixture::check(Parse *cell, TypeAdapter *a)
 {
-    qDebug() << "ColumnFixture::check";
+    //qDebug() << "ColumnFixture::check";
     if (!hasExecuted) {
         try {
             execute();

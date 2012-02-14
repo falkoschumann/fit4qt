@@ -32,7 +32,7 @@
 #include "typeadapter.h"
 
 #include <QtCore/QDateTime>
-#include <QtCore/QDebug>
+//#include <QtCore/QDebug>
 
 namespace Fit {
 
@@ -298,7 +298,7 @@ QVariant Fixture::parse(const QString &s, int type)
 void Fixture::check(Parse *cell, TypeAdapter *a)
 {
     QString text(cell->text());
-    qDebug() << "Fixture::check" << text;
+    //qDebug() << "Fixture::check" << text;
     if (text.isEmpty()) {
         try {
             info(cell, a->toString(a->get()));

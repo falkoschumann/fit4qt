@@ -30,7 +30,7 @@
 
 #include "parse.h"
 
-#include <QtCore/QDebug>
+//#include <QtCore/QDebug>
 
 namespace Fit {
 
@@ -52,7 +52,7 @@ Parse* Summary::rows(QListIterator<QString> &keys)
 {
     if (keys.hasNext()) {
         QString key(keys.next());
-        qDebug() << "key =" << key;
+        //qDebug() << "key =" << key;
         Parse *result = tr(td(key, td(summary->value(key).toString(), 0)), rows(keys));
         if (key == countsKey)
             mark(result);
