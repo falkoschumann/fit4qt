@@ -1,16 +1,8 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2012-01-13T23:18:20
-#
-#-------------------------------------------------
-
-include(../fit4qt.pri)
-include(../fit4qt-lib.pri)
-
 TEMPLATE = lib
 VERSION = 0.3.0
+DESTDIR = ../dist
 
-CONFIG += dll
+QT -= gui
 
 SOURCES += \
     parse.cpp \

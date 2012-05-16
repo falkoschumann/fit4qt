@@ -1,15 +1,13 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2012-01-13T23:25:27
-#
-#-------------------------------------------------
-
-include(../../fit4qt.pri)
-include(../../fit4qt-app.pri)
-
+TARGET = tst_frameworktest
 TEMPLATE = app
-TARGET = testframework
+DESTDIR = ../../dist
 
 QT += testlib
+QT -= gui
+CONFIG += console testcase
+CONFIG -= app_bundle
 
 SOURCES += frameworktest.cpp
+
+INCLUDEPATH += ../../
+LIBS += -L${DESTDIR} -lfit

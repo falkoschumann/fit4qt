@@ -1,14 +1,8 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2012-01-13T23:18:20
-#
-#-------------------------------------------------
-
 TEMPLATE = subdirs
+
+CONFIG += ordered
 
 SUBDIRS += \
     framework \
     parse \
     filerunner
-
-CONFIG += ordered

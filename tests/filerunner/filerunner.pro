@@ -1,15 +1,13 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2012-02-05T23:44:12
-#
-#-------------------------------------------------
-
-include(../../fit4qt.pri)
-include(../../fit4qt-app.pri)
-
+TARGET = tst_filerunnertest
 TEMPLATE = app
-TARGET = testfilerunner
+DESTDIR = ../../dist
 
 QT += testlib
+QT -= gui
+CONFIG += console testcase
+CONFIG -= app_bundle
 
 SOURCES += filerunnertest.cpp
+
+INCLUDEPATH += ../../
+LIBS += -L${DESTDIR} -lfit

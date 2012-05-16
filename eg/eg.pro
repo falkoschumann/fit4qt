@@ -1,13 +1,9 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2012-01-13T23:18:20
-#
-#-------------------------------------------------
-
-include(../fit4qt.pri)
-include(../fit4qt-app.pri)
-
 TEMPLATE = app
+DESTDIR = ../dist
+
+QT -= gui
+CONFIG += console
+CONFIG -= app_bundle
 
 SOURCES += main.cpp \
     arithmeticfixture.cpp \
@@ -16,3 +12,8 @@ SOURCES += main.cpp \
 HEADERS += \
     arithmeticfixture.h \
     arithmeticcolumnfixture.h
+
+
+
+INCLUDEPATH += ../
+LIBS += -L${DESTDIR} -lfit
