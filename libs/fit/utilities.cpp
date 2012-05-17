@@ -26,27 +26,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "arithmeticfixture.h"
-#include "arithmeticcolumnfixture.h"
+#include "utilities.h"
 
-#include <fit/filerunner.h>
-#include <fit/summary.h>
+#include <QtCore>
 
-#include <iostream>
+namespace Fit {
 
-using namespace Fit;
-
-int main(int argc, char *argv[])
+QDir directoryOf(const QString &subdir)
 {
-    Fixture::fixtures << &Fit::Summary::staticMetaObject;
-    Fixture::fixtures << &Eg::ArithmeticFixture::staticMetaObject;
-    Fixture::fixtures << &Eg::ArithmeticColumnFixture::staticMetaObject;
+    QDir dir(qApp->applicationDirPath());
 
-    FileRunner fileRunner;
-    try {
-        return fileRunner.run(argc, argv);
-    } catch (const std::exception &e) {
-        std::cerr << e.what() << std::endl;
-        return -1;
+#if defined(Q_OS_WIN)
+    if (dir.dirName().toLower() == "debug" || dir.dirName().toLower() == "release")
+        dir.cdUp();
+#elif defined(Q_OS_MAC)
+    if (dir.dirName() == "MacOS") {
+        dir.cdUp();
+        dir.cdUp();
+        dir.cdUp();
     }
+#endif
+    dir.cd(subdir);
+    return dir;
 }
+
+} // namespace Fit

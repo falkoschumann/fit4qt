@@ -3,9 +3,10 @@ TEMPLATE = subdirs
 CONFIG += ordered
 
 SUBDIRS += \
-    fit \
-    tests \
-    eg
+    libs \
+    plugins \
+    app \
+    tests
 
 OTHER_FILES += \
     runtests.sh \

@@ -1,6 +1,6 @@
 TEMPLATE = lib
 VERSION = 0.3.0
-DESTDIR = ../dist
+DESTDIR = ../../dist
 
 QT -= gui
 
@@ -14,7 +14,9 @@ SOURCES += \
     counts.cpp \
     primitivefixture.cpp \
     typeadapter.cpp \
-    summary.cpp
+    summary.cpp \
+    fixtureregistry.cpp \
+    utilities.cpp
 
 HEADERS += \
     parse.h \
@@ -27,4 +29,7 @@ HEADERS += \
     primitivefixture.h \
     fitexcept.h \
     typeadapter.h \
-    summary.h
+    summary.h \
+    fixtureregistry.h \
+    fitplugin.h \
+    utilities.h

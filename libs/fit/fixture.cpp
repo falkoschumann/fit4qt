@@ -28,6 +28,7 @@
 
 #include "fixture.h"
 
+#include "fixtureregistry.h"
 #include "parse.h"
 #include "typeadapter.h"
 
@@ -35,8 +36,6 @@
 //#include <QtCore/QDebug>
 
 namespace Fit {
-
-QSet<const QMetaObject*> Fixture::fixtures;
 
 Fixture::RunTime::RunTime() :
     start(QDateTime::currentMSecsSinceEpoch()),
@@ -143,15 +142,15 @@ Parse* Fixture::getFixtureName(Parse *tables)
 
 Fixture* Fixture::loadFixture(const QString &fixtureName)
 {
-    foreach (const QMetaObject* meta, fixtures) {
-        if (meta->className() == fixtureName) {
-            QObject *obj = meta->newInstance();
-            if (!obj)
-                throw std::runtime_error(QString("\"%1\" was found, but it's not a fixture.")
-                                         .arg(fixtureName).toStdString());
-            return qobject_cast<Fixture*>(obj);
-        }
+    const QMetaObject *meta = FixtureRegistry::instance()->fixture(fixtureName);
+    if (meta && meta->className() == fixtureName) {
+        QObject *obj = meta->newInstance();
+        if (!obj)
+            throw std::runtime_error(QString("\"%1\" was found, but it's not a fixture.")
+                                     .arg(fixtureName).toStdString());
+        return qobject_cast<Fixture*>(obj);
     }
+
     throw std::runtime_error(QString("The fixture \"%1\" was not found.")
                              .arg(fixtureName).toStdString());
 }

@@ -49,8 +49,6 @@ class Fixture : public QObject
     Q_OBJECT
 
 public:
-    static QSet<const QMetaObject*> fixtures;
-
     QHash<QString, QVariant> *summary;
     Counts *counts;
 

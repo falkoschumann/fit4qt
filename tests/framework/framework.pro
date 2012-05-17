@@ -9,5 +9,5 @@ CONFIG -= app_bundle
 
 SOURCES += frameworktest.cpp
 
-INCLUDEPATH += ../../
-LIBS += -L${DESTDIR} -lfit
+INCLUDEPATH += ../../libs/
+LIBS += -L$${DESTDIR} -lfit
