@@ -9,5 +9,6 @@ SUBDIRS += \
     tests
 
 OTHER_FILES += \
+    LICENSE.txt \
     runtests.sh \
     runexamples.sh

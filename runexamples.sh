@@ -1,6 +1,6 @@
 #!/bin/bash
 
 cd dist/
-./eg ../eg/input/arithmetic.html ../eg/output/arithmetic.html
+./fit ../examples/input/arithmetic.html ../examples/output/arithmetic.html
 
 exit 0

@@ -31,9 +31,7 @@
 #include "fixture.h"
 #include "parse.h"
 
-#include <QtCore/QDateTime>
-#include <QtCore/QFile>
-#include <QtCore/QFileInfo>
+#include <QtCore>
 
 #include <iostream>
 
@@ -97,7 +95,10 @@ bool FileRunner::args(int argc, char *argv[])
 
 QString FileRunner::read(QFile *input)
 {
-    input->open(QIODevice::ReadOnly);
+    if (!input->open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QString msg = QString("%1: %2").arg(input->fileName()).arg(input->errorString());
+        throw std::logic_error(msg.toStdString());
+    }
     return input->readAll();
 }
 

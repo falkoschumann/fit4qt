@@ -47,7 +47,7 @@ FixtureRegistry *FixtureRegistry::instance()
 
 FixtureRegistry::FixtureRegistry()
 {
-    QMetaObject fixture = Summary::staticMetaObject;
+    const QMetaObject &fixture(Summary::staticMetaObject);
     m_fixtures.insert(fixture.className(), &fixture);
 
     loadPlugins();
