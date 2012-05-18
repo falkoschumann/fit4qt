@@ -1,5 +1,4 @@
 TEMPLATE = lib
-DESTDIR = ../../dist/plugins
 
 QT -= gui
 CONFIG += plugin
@@ -15,4 +14,4 @@ HEADERS += \
     egplugin.h
 
 INCLUDEPATH += ../../libs/
-LIBS += -L../../dist/ -lfit
+LIBS += -L../../libs/fit -lfit

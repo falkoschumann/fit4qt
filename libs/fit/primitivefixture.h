@@ -47,6 +47,8 @@ public:
     static bool parseBool(Parse *cell);
 
     PrimitiveFixture(QObject *parent = 0);
+
+    using Fit::Fixture::check;
     void check(Parse *cell, const QString &value);
     void check(Parse *cell, long value);
     void check(Parse *cell, double value);

@@ -1,0 +1,9 @@
+# target
+*.dylib
+*.dll
+*.so
+
+# coverage
+*.gcda
+*.gcno
+

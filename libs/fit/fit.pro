@@ -1,6 +1,5 @@
 TEMPLATE = lib
 VERSION = 0.3.0
-DESTDIR = ../../dist
 
 QT -= gui
 
@@ -33,3 +32,9 @@ HEADERS += \
     fixtureregistry.h \
     fitplugin.h \
     utilities.h
+
+coverage {
+    QMAKE_CXXFLAGS += -O0 --coverage
+    QMAKE_LFLAGS += -O0 --coverage
+    QMAKE_CLEAN += *.gcno *.gcda
+}

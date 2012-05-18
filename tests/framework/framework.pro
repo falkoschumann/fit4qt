@@ -1,6 +1,5 @@
 TARGET = tst_frameworktest
 TEMPLATE = app
-DESTDIR = ../../dist
 
 QT += testlib
 QT -= gui
@@ -10,4 +9,4 @@ CONFIG -= app_bundle
 SOURCES += frameworktest.cpp
 
 INCLUDEPATH += ../../libs/
-LIBS += -L$${DESTDIR} -lfit
+LIBS += -L../../libs/fit -lfit

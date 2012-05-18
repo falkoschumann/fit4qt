@@ -5,8 +5,8 @@ CONFIG += ordered
 SUBDIRS += \
     libs \
     plugins \
+    tests \
     app \
-    tests
 
 OTHER_FILES += \
     LICENSE.txt \
