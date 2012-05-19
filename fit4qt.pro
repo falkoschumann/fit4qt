@@ -10,5 +10,6 @@ SUBDIRS += \
 
 OTHER_FILES += \
     LICENSE.txt \
+    README.txt \
     runtests.sh \
     runexamples.sh
