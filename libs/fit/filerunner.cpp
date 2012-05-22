@@ -33,7 +33,7 @@
 
 #include <QtCore>
 
-#include <iostream>
+#include <stdexcept>
 
 namespace Fit {
 
@@ -43,54 +43,47 @@ FileRunner::FileRunner(QObject *parent) :
 {
 }
 
-int FileRunner::run(int argc, char *argv[])
+void FileRunner::run(int argc, char *argv[])
 {
-    if (args(argc, argv)) {
-        process();
-        return exit();
-    }
-    return -1;
+    args(argc, argv);
+    process();
+    exit();
 }
 
 void FileRunner::process()
 {
     try {
         if (input.indexOf("<wiki>") >= 0) {
-            QStringList tags;
-            tags << "wiki" << "table" << "tr" << "td";
-            tables = new Parse(input, tags);
+            tables = new Parse(input, QStringList() << "wiki" << "table" << "tr" << "td");
             fixture->doTables(tables->parts);
         } else {
-            QStringList tags;
-            tags << "table" << "tr" << "td";
-            tables = new Parse(input, tags);
+            tables = new Parse(input, QStringList() << "table" << "tr" << "td");
             fixture->doTables(tables);
         }
-    } catch (const std::exception e) {
+    } catch (const std::exception &e) {
         exception(e);
     }
     tables->print(output);
 }
 
-bool FileRunner::args(int argc, char *argv[])
+void FileRunner::args(int argc, char *argv[])
 {
     if (argc != 3) {
-        std::cerr << "usage: fit input-file output-file";
-        return false;
+        qCritical() << "usage: fit input-file output-file";
+        qApp->exit(-1);
     }
 
     QFile *in = new QFile(argv[1]);
+    QFileInfo inInfo(*in);
+    fixture->summary.insert("input file", inInfo.absoluteFilePath());
+    fixture->summary.insert("input update", inInfo.lastModified());
     QFile *out = new QFile(argv[2]);
-    QFileInfo fileInfo(*in);
-    fixture->summary->insert("input file", fileInfo.absoluteFilePath());
-    fixture->summary->insert("input update", fileInfo.lastModified());
-    fileInfo.setFile(*out);
-    fixture->summary->insert("output file", fileInfo.absoluteFilePath());
+    QFileInfo outInfo(*out);
+    fixture->summary.insert("output file", outInfo.absoluteFilePath());
+
     input = read(in);
     out->open(QIODevice::WriteOnly);
     output.setDevice(out);
-
-    return true;
 }
 
 QString FileRunner::read(QFile *input)
@@ -110,8 +103,8 @@ void FileRunner::exception(const std::exception &e)
 
 int FileRunner::exit()
 {
-    std::cerr << fixture->counts->toString().toStdString() << std::endl;
-    return fixture->counts->wrong + fixture->counts->exceptions;
+    qCritical() << fixture->counts.toString();
+    return fixture->counts.wrong + fixture->counts.exceptions;
 }
 
 } // namespace Fit

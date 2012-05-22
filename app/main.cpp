@@ -28,9 +28,9 @@
 
 #include <fit/filerunner.h>
 
-#include <QCoreApplication>
+#include <QtCore>
 
-#include <iostream>
+#include <exception>
 
 using namespace Fit;
 
@@ -38,11 +38,11 @@ int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
 
-    FileRunner fileRunner;
     try {
-        return fileRunner.run(argc, argv);
+        FileRunner fileRunner;
+        fileRunner.run(argc, argv);
     } catch (const std::exception &e) {
-        std::cerr << e.what() << std::endl;
-        return -1;
+        qCritical() << e.what();
+        app.exit(-1);
     }
 }

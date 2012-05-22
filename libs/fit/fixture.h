@@ -32,8 +32,6 @@
 #include "counts.h"
 
 #include <QtCore/QHash>
-#include <QtCore/QSet>
-#include <QtCore/QObject>
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>
 
@@ -47,10 +45,11 @@ class TypeAdapter;
 class Fixture : public QObject
 {
     Q_OBJECT
+    Q_DISABLE_COPY(Fixture)
 
 public:
-    QHash<QString, QVariant> *summary;
-    Counts *counts;
+    QHash<QString, QVariant> summary;
+    Counts counts;
 
     class RunTime {
     public:

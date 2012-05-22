@@ -31,7 +31,6 @@
 
 #include <exception>
 #include <string>
-#include <stdexcept>
 
 namespace Fit {
 

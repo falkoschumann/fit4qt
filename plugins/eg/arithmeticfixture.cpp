@@ -30,6 +30,8 @@
 
 #include <fit/parse.h>
 
+#include <stdexcept>
+
 using namespace Fit;
 
 namespace Eg {

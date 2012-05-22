@@ -32,8 +32,9 @@
 #include "parse.h"
 #include "typeadapter.h"
 
-#include <QtCore/QDateTime>
-//#include <QtCore/QDebug>
+#include <QtCore>
+
+#include <stdexcept>
 
 namespace Fit {
 
@@ -60,26 +61,22 @@ QString Fixture::RunTime::d(long scale)
 }
 
 Fixture::Fixture(QObject *parent) :
-    QObject(parent),
-    summary(new QHash<QString, QVariant>()),
-    counts(new Counts)
+    QObject(parent)
 {
 }
 
 Fixture::~Fixture()
 {
-    delete summary;
-    delete counts;
 }
 
 // Traversal //////////////////////////
 
 void Fixture::doTables(Parse *tables)
 {
-    summary->insert("run date", QDateTime());
+    summary.insert("run date", QDateTime());
     QVariant runTime;
     runTime.setValue(RunTime());
-    summary->insert("run elapsed time", runTime);
+    summary.insert("run elapsed time", runTime);
     if (tables) {
         Parse *fixtureName = getFixtureName(tables);
         if (fixtureName) {
@@ -211,14 +208,14 @@ QString Fixture::yellow("#ffffcf");
 void Fixture::right(Parse *cell)
 {
     cell->addToTag(" bgcolor=\"" + green + "\"");
-    counts->right++;
+    counts.right++;
 }
 
 void Fixture::wrong(Parse *cell)
 {
     cell->addToTag(" bgcolor=\"" + red + "\"");
     cell->body = escape(cell->text());
-    counts->wrong++;
+    counts.wrong++;
 }
 
 void Fixture::wrong(Parse *cell, const QString &actual)
@@ -240,7 +237,7 @@ QString Fixture::info(const QString &message)
 void Fixture::ignore(Parse *cell)
 {
     cell->addToTag(" bgcolor=\"" + gray + "\"");
-    counts->ignores++;
+    counts.ignores++;
 }
 
 void Fixture::error(Parse *cell, const QString &message)
@@ -248,7 +245,7 @@ void Fixture::error(Parse *cell, const QString &message)
     cell->body = escape(cell->text());
     cell->addToBody("<hr><pre>" + escape(message) + "</pre>");
     cell->addToTag(" bgcolor=\"" + yellow + "\"");
-    counts->exceptions++;
+    counts.exceptions++;
 }
 
 void Fixture::exception(Parse *cell, const std::exception &exception)

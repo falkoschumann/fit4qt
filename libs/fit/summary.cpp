@@ -43,8 +43,8 @@ Summary::Summary(QObject *parent) :
 
 void Summary::doTable(Parse *table)
 {
-    summary->insert(countsKey, counts->toString());
-    QListIterator<QString> keys(summary->keys());
+    summary.insert(countsKey, counts.toString());
+    QListIterator<QString> keys(summary.keys());
     table->parts->more = rows(keys);
 }
 
@@ -53,7 +53,7 @@ Parse* Summary::rows(QListIterator<QString> &keys)
     if (keys.hasNext()) {
         QString key(keys.next());
         //qDebug() << "key =" << key;
-        Parse *result = tr(td(key, td(summary->value(key).toString(), 0)), rows(keys));
+        Parse *result = tr(td(key, td(summary.value(key).toString(), 0)), rows(keys));
         if (key == countsKey)
             mark(result);
         return result;
@@ -75,10 +75,9 @@ Parse* Summary::td(const QString &body, Parse *more)
 void Summary::mark(Parse *row)
 {
     // mark summary good/bad without counting beyond here
-    Counts *official = new Counts(*counts);
-    counts = new Counts();
+    Counts official(counts);
     Parse *cell = row->parts->more;
-    if (official->wrong + official->exceptions > 0) {
+    if (official.wrong + official.exceptions > 0) {
         wrong(cell);
     } else {
         right(cell);

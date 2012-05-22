@@ -42,6 +42,7 @@ class Parse;
 class FileRunner : public QObject
 {
     Q_OBJECT
+    Q_DISABLE_COPY(FileRunner)
 
 public:
     QString input;
@@ -50,9 +51,9 @@ public:
     QTextStream output;
 
     explicit FileRunner(QObject *parent = 0);
-    int run(int argc, char *argv[]);
+    void run(int argc, char *argv[]);
     void process();
-    bool args(int argc, char *argv[]);
+    void args(int argc, char *argv[]);
 
 protected:
     QString read(QFile *input);
